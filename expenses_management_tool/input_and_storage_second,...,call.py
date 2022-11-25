@@ -1,27 +1,23 @@
 import pandas as pd
 from datetime import date
+import os
+
+
+root = os.getcwd()
+filename = 'expenses_dataset.csv'
+file = os.path.join(root,filename)
+
 date = str(date.today())
 
 
 
-def storage(df):
-    i = 1
-    if i == 1:
-        data = pd.DataFrame()
-    else:
-        data = pd.read_csv("expenses_dataset.csv")
-        frames = [df, data]
-        data = pd.concat(frames)
-        data.to_csv("expenses_dataset.csv", index=False)
-        print('--saved--')
-        return (data)
-    yield  
 
 
 
 
 
-def input_query(date):
+
+def query(date):
     expense = str(input("what have you spent money on : "))
     amount = float(input("how much money have you spent : "))
     importance = int(input("how important was your expense? (1-4) : "))
@@ -33,14 +29,23 @@ def input_query(date):
                        ...
                        '''))
 
-    df = pd.DataFrame({"category": [category],
-                       "importance": [importance],
+    df = pd.DataFrame({"expense": [expense],
                        "amount":[amount] ,
-                       "expense": [expense],
+                        "category": [category],
+                       "importance": [importance],
                        "date": [date]})
     return(df)
 
 
+def storage(df):
+    
+   data = pd.read_csv(file)
+   frames = [df, data]
+   data = pd.concat(frames)
+   data.to_csv("expenses_dataset.csv", index=False)
+   print('--saved--')
+   print(data)
+   return data 
 
 
 
@@ -49,4 +54,11 @@ def input_query(date):
 
 
 
-storage(input_query(date))
+
+
+
+
+
+
+storage(query(date))
+print('------------------')
