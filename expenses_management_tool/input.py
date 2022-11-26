@@ -35,7 +35,11 @@ def query(date):
             "amount": [amount],
             "category": [category],
             "importance": [importance],
-            "date": [date],
+            "date": [date]
+            
+            
+            
+            ,
         }
     )
     return df
@@ -62,8 +66,11 @@ def store(date, df):
         )
         frames = [df, data]
         data = pd.concat(frames)
+        data = split_dates(data)  # day, month, year as new columns
         data.to_csv("expenses_dataset.csv", index=False)
         print("--saved--")
+        to_drop = ['date'] # only columns: day, month, year column are nessesary
+        data = data.drop(to_drop, axis=1)
         print(data)
         return data
 
@@ -71,9 +78,12 @@ def store(date, df):
     try:
         data = pd.read_csv(file)
         frames = [df, data]
-        data = pd.concat(frames)
+        data = pd.concat(frames) 
+        split_dates(data) # day, month, year as new columns
         data.to_csv("expenses_dataset.csv", index=False)
         print("--saved--")
+        to_drop = ['date']  # only columns: day, month, year column are nessesary
+        data = data.drop(to_drop, axis=1)
         print(data)
         return data
 
@@ -81,7 +91,34 @@ def store(date, df):
     except:
         store_in_new_ds(df)
         print('\n--->new dataset "expenses_dataset.csv"  was successfully created.\n')
-
+    
+    
+    
+    
+# useful functions: ( later outscourced to own file: "mainly_used_functions" )
+    
+    
+# split date into seperatet columns
+def split_dates(data):
+    #splits the date column in to three new_columns:
+    new_columns = data['date'].str.split('-', expand= True) 
+    data['day'] = new_columns[2]
+    data['month'] =new_columns[1]
+    data['year'] =new_columns[0]
+    return data
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 
 if __name__ == "__main__":
     store(date, query(date))
