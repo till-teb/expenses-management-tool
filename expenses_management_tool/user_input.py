@@ -62,11 +62,11 @@ def store(DATE, df):
         )
         frames = [df, data]
         data = pd.concat(frames)
-        data = split_DATE(data)  # day, month, year as new columns
-        data.to_csv("expenses_dataset.csv", index=False)
+        data = split_DATE(data)  # day, month, year as new column
         print("--saved--")
         to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
         data = data.drop(to_drop, axis=1)
+        data.to_csv("expenses_dataset.csv", index=False)
         print(data)
         return data
 
@@ -76,10 +76,10 @@ def store(DATE, df):
         frames = [df, data]
         data = pd.concat(frames)
         split_DATE(data)  # day, month, year as new columns
-        data.to_csv("expenses_dataset.csv", index=False)
         print("--saved--")
         to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
         data = data.drop(to_drop, axis=1)
+        data.to_csv("expenses_dataset.csv", index=False)
         print(data)
         return data
 
