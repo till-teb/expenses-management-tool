@@ -7,7 +7,7 @@ DATE = str(date.today())
 
 # get the right working directory
 root = os.getcwd()
-FILENAME = "expenses_dataset.csv"
+FILENAME = "datasets\\expenses_dataset.csv"
 
 # dataset
 file = os.path.join(root, FILENAME)
@@ -70,7 +70,13 @@ def store(DATE, df):
         print("--saved--")
         to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
         data = data.drop(to_drop, axis=1)
-        data.to_csv("expenses_dataset.csv", index=False)
+        
+        folder = "datasets"
+        folder_PATH = os.path.join(root, folder) 
+        if not os.path.exists(folder_PATH):
+            os.mkdir(folder_PATH) #create folder "datasets"
+        
+        data.to_csv(FILENAME, index=False)
         print(data)
         return data
 
@@ -83,7 +89,7 @@ def store(DATE, df):
         print("--saved--")
         to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
         data = data.drop(to_drop, axis=1)
-        data.to_csv("expenses_dataset.csv", index=False)
+        data.to_csv(FILENAME, index=False)
         print(data)
         return data
 
