@@ -19,12 +19,15 @@ def query(DATE):
     importance = int(input("how important was your expense? (1-4) : "))
     category = int(
         input(
-            """please choose the category:
-
-                       (1) x
-                       (2) x
-                       (3) x
-                       ...
+            """
+(1) Food 
+(2) consumer goods
+(3) transportation
+(4) house expenses
+(5) free time expenses
+(6) insurance + taxes
+(7) bank + savings investments
+(8) other + extraordinary expenses 
                        """
         )
     )
@@ -62,10 +65,10 @@ def store(DATE, df):
         )
         frames = [df, data]
         data = pd.concat(frames)
-        data = split_DATE(data)  # day, month, year as new column
+        #data = split_DATE(data)  # day, month, year as new column
         print("--saved--")
-        to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
-        data = data.drop(to_drop, axis=1)
+        #to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
+        #data = data.drop(to_drop, axis=1)
         data.to_csv("expenses_dataset.csv", index=False)
         print(data)
         return data
@@ -75,10 +78,10 @@ def store(DATE, df):
         data = pd.read_csv(file)
         frames = [df, data]
         data = pd.concat(frames)
-        split_DATE(data)  # day, month, year as new columns
+        #data = split_DATE(data)  # day, month, year as new columns
         print("--saved--")
-        to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
-        data = data.drop(to_drop, axis=1)
+        #to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
+        #data = data.drop(to_drop, axis=1)
         data.to_csv("expenses_dataset.csv", index=False)
         print(data)
         return data
@@ -90,16 +93,6 @@ def store(DATE, df):
 
 
 # useful functions: ( later outscourced to own file: "mainly_used_functions" )
-
-
-# split DATE into seperatet columns
-def split_DATE(data):
-    # splits the DATE column in to three new_columns:
-    new_columns = data["DATE"].str.split("-", expand=True)
-    data["day"] = new_columns[2]
-    data["month"] = new_columns[1]
-    data["year"] = new_columns[0]
-    return data
 
 
 if __name__ == "__main__":
