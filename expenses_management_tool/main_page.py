@@ -1,20 +1,22 @@
 import streamlit as st
 import pandas as pd
-# st.markdown("page 2")
-st.sidebar.markdown("page 2")
+
+
+# Sidebar setup
+st.sidebar.markdown("Do you have a csv file?")
+upload_file = st.sidebar.file_uploader("Upload your csv here")
+
+# Check if file has been uploaded
+if upload_file is not None:
+    df = pd.read_csv(upload_file)
+    st.session_state['df'] = df
+
 
 st.title("Expenses")
-st.write("What are you spend?")
+#st.write("What are you spend?")
 
 
-if st.checkbox("Upload csv files"):
-    uploaded_file = st.file_uploader("Choose a file")
-    if uploaded_file is not None:
-        dataframe = pd.read_csv(uploaded_file)
-        st.write(dataframe)
-        st.session_state["df"] = dataframe 
-
-if st.checkbox("Enter single entry"):
+def enter_data():
     col1, col2 = st.columns(2)
     
     with col1:
@@ -32,3 +34,35 @@ if st.checkbox("Enter single entry"):
         st.radio("How you are feeling on this purchase", ("Good", "Bad"))
     
     st.button("submit")
+
+def delete_data():
+    pass
+
+def edit_data():
+    pass
+
+def view_data():
+    if upload_file is not None:
+        st.write(df)
+    else:
+        st.write("No dataframe available")
+
+options = ["Enter single entry",
+           "Delete entry",
+           "Edit entry",
+           "View your dataframe"]
+
+# Create a select box
+option = st.selectbox("What you want to do", options)
+
+if option == options[0]:
+    enter_data()
+    
+if option == options[1]:
+    delete_data()
+
+if option == options[2]:
+    edit_data()
+    
+if option == options[3]:
+    view_data()
