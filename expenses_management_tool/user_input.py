@@ -1,6 +1,7 @@
 import os
 from datetime import date
 import pandas as pd
+from useful_functions import split_DATE
 
 DATE = str(date.today())
 
@@ -65,23 +66,23 @@ def store(DATE, df):
         )
         frames = [df, data]
         data = pd.concat(frames)
-        #data = split_DATE(data)  # day, month, year as new column
+        data = split_DATE(data)  # day, month, year as new column
         print("--saved--")
-        #to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
-        #data = data.drop(to_drop, axis=1)
+        to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
+        data = data.drop(to_drop, axis=1)
         data.to_csv("expenses_dataset.csv", index=False)
         print(data)
         return data
 
     # check if a dataset already exist
     try:
+        df = split_DATE(df)  # day, month, year as new columns
         data = pd.read_csv(file)
         frames = [df, data]
         data = pd.concat(frames)
-        #data = split_DATE(data)  # day, month, year as new columns
         print("--saved--")
-        #to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
-        #data = data.drop(to_drop, axis=1)
+        to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
+        data = data.drop(to_drop, axis=1)
         data.to_csv("expenses_dataset.csv", index=False)
         print(data)
         return data

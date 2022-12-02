@@ -2,7 +2,7 @@ import os
 import datetime
 import pandas as pd
 import calendar
-from user_input import split_DATE
+from useful_functions import split_DATE
 
 DATE = (datetime.date.today())
 DAY = calendar.day_name[DATE.weekday()]
