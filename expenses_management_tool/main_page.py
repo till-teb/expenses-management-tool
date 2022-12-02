@@ -28,9 +28,7 @@ if st.checkbox("Enter single entry"):
     with col2:
         # st.write("Date")
         st.date_input("Date")
-    
-        # with col3:
-        # st.write("Day label")
+        st.slider("Importance scale", min_value=1, max_value=4)
         st.radio("How you are feeling on this purchase", ("Good", "Bad"))
     
     st.button("submit")
