@@ -16,6 +16,7 @@ file = os.path.join(root, FILENAME)
 
 # Execute query
 def query(DATE):
+    regular_exp = 0
     expense = str(input("what have you spent money on : ")).lower()
     amount = float(input("how much money have you spent : "))
     importance = int(input("how important was your expense? (1-4) : "))
@@ -41,6 +42,7 @@ def query(DATE):
             "category": [category],
             "importance": [importance],
             "DATE": [DATE],
+            "regular": [regular_exp]
         }
     )
     return df
@@ -100,8 +102,19 @@ def store(DATE, df):
         print('\n--->new dataset "expenses_dataset.csv"  was successfully created.\n')
 
 
+
+
+
+def query_regular_expenses():
+     pass
+    
+    
+    
+    
+    
+
 # useful functions: ( later outscourced to own file: "mainly_used_functions" )
 
 
 if __name__ == "__main__":
-    store(DATE, query(DATE))
+    store(DATE, query(DATE))    # fuction to query and store expense
