@@ -1,12 +1,13 @@
 import os
 from datetime import date
 import pandas as pd
+from useful_functions import split_DATE
 
 DATE = str(date.today())
 
 # get the right working directory
 root = os.getcwd()
-FILENAME = "expenses_dataset.csv"
+FILENAME = "datasets\\expenses_dataset.csv"
 
 # dataset
 file = os.path.join(root, FILENAME)
@@ -65,24 +66,30 @@ def store(DATE, df):
         )
         frames = [df, data]
         data = pd.concat(frames)
-        #data = split_DATE(data)  # day, month, year as new column
+        data = split_DATE(data)  # day, month, year as new column
         print("--saved--")
-        #to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
-        #data = data.drop(to_drop, axis=1)
-        data.to_csv("expenses_dataset.csv", index=False)
+        to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
+        data = data.drop(to_drop, axis=1)
+        
+        folder = "datasets"
+        folder_PATH = os.path.join(root, folder) 
+        if not os.path.exists(folder_PATH):
+            os.mkdir(folder_PATH) #create folder "datasets"
+        
+        data.to_csv(FILENAME, index=False)
         print(data)
         return data
 
     # check if a dataset already exist
     try:
+        df = split_DATE(df)  # day, month, year as new columns
         data = pd.read_csv(file)
         frames = [df, data]
         data = pd.concat(frames)
-        #data = split_DATE(data)  # day, month, year as new columns
         print("--saved--")
-        #to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
-        #data = data.drop(to_drop, axis=1)
-        data.to_csv("expenses_dataset.csv", index=False)
+        to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
+        data = data.drop(to_drop, axis=1)
+        data.to_csv(FILENAME, index=False)
         print(data)
         return data
 
