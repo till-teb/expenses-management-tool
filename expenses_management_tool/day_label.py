@@ -10,7 +10,7 @@ DAY = calendar.day_name[DATE.weekday()]
 
 # get the right working directory
 root = os.getcwd()
-FILENAME = "datasets\\day_label.csv"
+FILENAME = "day_label.csv"
 
 # dataset
 file = os.path.join(root, FILENAME)

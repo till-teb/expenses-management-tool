@@ -3,11 +3,12 @@ from datetime import date
 import pandas as pd
 from useful_functions import split_DATE
 
+
 DATE = str(date.today())
 
 # get the right working directory
 root = os.getcwd()
-FILENAME = "datasets\\expenses_dataset.csv"
+FILENAME = "expenses_dataset.csv"
 
 # dataset
 file = os.path.join(root, FILENAME)
