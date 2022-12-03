@@ -6,4 +6,3 @@ def split_DATE(data):
     data["month"] = new_columns[1]
     data["year"] = new_columns[0]
     return data
-
