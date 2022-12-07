@@ -1,0 +1,4 @@
+expense,amount,category,importance,regular,day,month,year
+tedi,22.0,2,1,0,03,12,2022
+rewe,50.0,1,2,<class 'int'>,3,12,2022
+fuel,44.0,3,4,0.0,3,12,2022

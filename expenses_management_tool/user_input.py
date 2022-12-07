@@ -16,7 +16,7 @@ file = os.path.join(root, FILENAME)
 
 # Execute query
 def query(DATE):
-    regular_exp = 0
+    regular_exp = int(0)
     expense = str(input("what have you spent money on : ")).lower()
     amount = float(input("how much money have you spent : "))
     importance = int(input("how important was your expense? (1-4) : "))
@@ -106,7 +106,65 @@ def store(DATE, df):
 
 
 def query_regular_expenses():
-     pass
+    regular_exp = int(1)
+    expense = str(input("what is your regular expense: ")).lower()
+    amount = float(input("how much money do you need to speend regular: "))
+    importance = int(input("how important is your regular expense? (1-4) : "))
+    every_x_month = int(input(""" 
+                              1 = every month
+                              2 = every second month
+                              3 = every third month 
+                              ...
+                              
+                              how often does the expense occur monthly? :
+                                  
+                              """))
+    every_x_day = int(input("""
+                              1 = first day of month
+                              2 = second day of month
+                              3 = third day of month 
+                              ...
+                              
+                              On which day of the month the expense is debited? :
+                                  
+                              """))
+    category = int(
+        input(
+            """
+(1) Food 
+(2) consumer goods
+(3) transportation
+(4) house expenses
+(5) free time expenses
+(6) insurance + taxes
+(7) bank + savings investments
+(8) other + extraordinary expenses 
+                       """
+        )
+    )
+
+    start_date = str(
+        input("""should the entry start 
+              (1) from today 
+              (2) retroactively to 1.1.  
+              
+              """)
+              )
+              
+    regular_bookings = pd.DataFrame(
+        {
+            "expense": [expense],
+            "amount": [amount],
+            "category": [category],
+            "importance": [importance],
+            "DATE": [DATE],
+            "regular": [regular_exp],
+            "frequency_monthly": [every_x_month],
+            "frequency_dayly": [every_x_day]
+        }
+    )
+    
+#    ....
     
     
     
