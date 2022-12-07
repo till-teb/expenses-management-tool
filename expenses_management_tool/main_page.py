@@ -6,7 +6,7 @@ from streamlit_function import enter_data, delete_data, edit_data, view_data
 
 # get the right working directory
 root = os.getcwd()
-FILENAME = "datasets\\expenses_dataset.csv"
+FILENAME = "expenses_dataset.csv"
 
 # dataset
 file = os.path.join(root, FILENAME)
