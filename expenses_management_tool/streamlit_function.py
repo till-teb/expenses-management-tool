@@ -14,7 +14,11 @@ categories = [
     "Other & Extraordinary",
 ]
 
-subcategories = [["Bakery", "Kiosk", "Supermarket"], ["A", "B", "C"]]
+# define the subcategories
+subcategories = [
+    ["Bakery", "Kiosk", "Supermarket"],
+    ["A", "B", "C"]
+    ]
 
 
 def enter_data():
@@ -53,42 +57,94 @@ def enter_data():
     return df
 
 
+def filter_month():
+    """
+    Function to filter month, useful for edit/delete data from dataframe
+    """
+    months = {
+                1 : "Jan",
+                2 : "Feb",
+                3 : "Mar",
+                4 : "Apr",
+                5 : "May",
+                6 : "Jun",
+                7 : "Jul",
+                8 : "Aug",
+                9 : "Sep",
+                10 : "Oct",
+                11 : "Nov",
+                12 : "Dec",
+        }
+    
+    month = st.selectbox(
+        "Choose month",(item for item in months.values()))
+    
+    for key, item in months.items():
+        if item == month:
+            month_num = key
+            
+    return month_num
+
+    
+def filter_category():
+    """
+    Function to filter category, useful for edit/delete data from dataframe
+    """
+    option = st.selectbox("Choose category", (item for item in categories))
+    return option
+
 def delete_data():
     """
     Function to delete a single data entry from dataframe
     """
+    if "df" in st.session_state:
+        df = st.session_state["df"]
+    else:
+        st.write("No dataframe available")
+        
     st.write("Do you wish to delete any data?")
 
     options = ["Month", "Category"]
     option = st.multiselect("Filter by", options)
-
-    def filter_month():
-        month = st.selectbox(
-            "Choose month",
-            (
-                "Jan",
-                "Feb",
-                "Mar",
-                "Apr",
-                "May",
-                "Jun",
-                "Jul",
-                "Aug",
-                "Sep",
-                "Oct",
-                "Nov",
-                "Dec",
-            ),
-        )
-
-    pass  # will continue later
+    
+    if len(option) == 2:
+        month = filter_month()
+        category = filter_category()
+        mask_month = df["month"] == month
+        mask_category = df["category"] == category
+        filtered_df = df[mask_month & mask_category]
+        st.write(filtered_df)
+        
+    elif "Month" in option:
+        month = filter_month() # get the entry from selected month
+        mask = df["month"] == month
+        filtered_df = df[mask]
+        st.write(filtered_df)
+              
+    elif "Category" in option:
+        category = filter_category() # get the entry from selected category
+        mask = df["category"] == category
+        filtered_df = df[mask]
+        st.write(filtered_df)
+        
+    
 
 
 def edit_data():
     """
     Function to edit a column in dataframe
     """
-    pass
+    st.write("Do you wish to edit any data?")
+
+    options = ["Month", "Category"]
+    option = st.multiselect("Filter by", options)
+    
+        
+    if "Month" in option:
+        filter_month()
+        
+    if "Category" in option:
+        filter_category()
 
 
 def view_data():
