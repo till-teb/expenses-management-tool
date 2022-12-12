@@ -147,7 +147,7 @@ def delete_data():
     options = ["Month", "Category"]
     option = st.multiselect("Filter by", options)
 
-    if len(option) == 2:
+    if len(option) == 2:    # if both filter chosen
         month = filter_month()
         category = filter_category()
         mask_month = df["month"] == month
@@ -166,6 +166,25 @@ def delete_data():
         mask = df["category"] == category
         filtered_df = df[mask]
         st.write(filtered_df)
+
+    try:
+        delete_index = st.multiselect(
+            "Choose index to delete", (i for i in range(0, len(filtered_df)))
+        )
+        delete_df = filtered_df.iloc[delete_index]
+        st.write("This entry will be deleted")
+        st.write(delete_df)
+        return delete_df
+    except:
+        st.write("Please choose your filter")
+
+
+def remove_rows(df, col, values):
+    """
+    Function to remove row from selected column, that contain values.
+    Values can be a list.
+    """
+    return df[~df[col].isin(values)]
 
 
 def edit_data():
