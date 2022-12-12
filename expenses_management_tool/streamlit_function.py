@@ -88,6 +88,7 @@ def enter_data():
             "item": [item],
             "amount": [amount],
             "category": [category],
+            "subcategory": [subcategory],
             "importance": [importance],
             "DATE": [str(DATE)],
             "feeling": [feeling],
