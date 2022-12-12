@@ -186,7 +186,6 @@ def remove_rows(df, col, values):
     """
     return df[~df[col].isin(values)]
 
-
 def edit_data():
     """
     Function to edit a column in dataframe
