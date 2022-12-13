@@ -248,7 +248,13 @@ if option == options[0]:
     recurring_df = enter_recurring()
     submit = st.button("Submit")
     if submit:
-        recurring_df = store(recurring_df)
+        if recurring_df["item"][0] != "":  # check input for item
+            recurring_df = store(recurring_df)
+            st.session_state["recurring_df"] = recurring_df
+            st.write("Saved successfully")
+        else:
+            st.write("Invalid input")
+
 
 if option == options[1]:
     # load the file from cache
