@@ -8,7 +8,7 @@ import uuid
 root = os.getcwd()
 FILENAME = "recurring_expenses.csv"
 
-# dataset
+# load the dataset
 file = os.path.join(root, FILENAME)
 
 try:
@@ -18,7 +18,7 @@ try:
 except:
     st.sidebar.write("No csv file found")
 
-#page title and description
+# page title and description
 st.title("Recurring expense")
 st.subheader("Here is your monthly fixed cost / your monthly commitment")
 
@@ -60,52 +60,54 @@ subcategories = [
     ["Additional costs", "Investment", "Other"],
 ]
 
+
 def enter_recurring():
     col1, col2 = st.columns(2)
-    with col1: 
+    with col1:
         item = st.text_input("Item")
         amount = st.number_input("Price")
         importance = st.slider("Importance scale", min_value=1, max_value=4)
-    
+
     with col2:
         category = st.selectbox("Category", (item for item in categories))
-        
+
         # show subcategories related to its main category
         if category == categories[0]:
             subcategory = st.selectbox(
                 "Subcategory", (item for item in subcategories[0])
             )
-        
+
         elif category == categories[1]:
             subcategory = st.selectbox(
                 "Subcategory", (item for item in subcategories[1])
             )
-        
+
         elif category == categories[2]:
             subcategory = st.selectbox(
                 "Subcategory", (item for item in subcategories[2])
             )
-        
+
         elif category == categories[3]:
             subcategory = st.selectbox(
                 "Subcategory", (item for item in subcategories[3])
             )
-        
+
         elif category == categories[4]:
             subcategory = st.selectbox(
                 "Subcategory", (item for item in subcategories[4])
             )
-            
+
     recurring_df = pd.DataFrame(
         {
             "item": [item],
             "amount": [amount],
             "importance": [importance],
             "category": [category],
-            "subcategory": [subcategory]
+            "subcategory": [subcategory],
         }
     )
     return recurring_df
+
 
 def store(df):
     """
@@ -126,12 +128,12 @@ def store(df):
         )
         frames = [df, data]
         data = pd.concat(frames)
-        
+
         # save all the datasets into one folder "datasets"
         # folder = "datasets"
         # folder_PATH = os.path.join(root, folder)
         # if not os.path.exists(folder_PATH):
-        #     os.mkdir(folder_PATH)  # create folder "datasets" 
+        #     os.mkdir(folder_PATH)  # create folder "datasets"
 
         data.to_csv(FILENAME, index=False)
         return data
@@ -149,7 +151,7 @@ def store(df):
         store_in_new_ds(df)
 
     return
-   
+
 
 def delete_recurring():
     """
@@ -169,10 +171,10 @@ def delete_recurring():
         col1, col2 = st.columns(2)
         with col1:
             category = st.selectbox("Choose category", (item for item in categories))
-        
+
         with col2:
-            importance = st.selectbox("Choose importance", (i for i in range(1,5)))
-        
+            importance = st.selectbox("Choose importance", (i for i in range(1, 5)))
+
         mask_cat = df["category"] == category
         mask_imp = df["importance"] == importance
         filtered_df = df[mask_cat & mask_imp]
@@ -189,9 +191,9 @@ def delete_recurring():
             st.write("No data available")
         else:
             st.write(filtered_df)
-        
+
     elif "Importance" in option:
-        importance = st.selectbox("Choose importance", (i for i in range(1,5)))
+        importance = st.selectbox("Choose importance", (i for i in range(1, 5)))
         mask = df["importance"] == importance
         filtered_df = df[mask]
         if len(filtered_df) == 0:
@@ -210,9 +212,10 @@ def delete_recurring():
         else:
             st.write(delete_df)
         return delete_df
-    
+
     except:
         st.write("Please choose your filter")
+
 
 def remove_rows(df, col, values):
     """
@@ -220,6 +223,7 @@ def remove_rows(df, col, values):
     Values can be a list.
     """
     return df[~df[col].isin(values)]
+
 
 def view_recurring():
     """
@@ -245,10 +249,10 @@ if option == options[0]:
     submit = st.button("Submit")
     if submit:
         recurring_df = store(recurring_df)
-        
+
 if option == options[1]:
     # load the file from cache
-    recurring_df = st.session_state["recurring_df"] 
+    recurring_df = st.session_state["recurring_df"]
 
     # add temporary unique key
     recurring_df["uuid"] = [uuid.uuid4() for _ in range(len(recurring_df.index))]
@@ -261,7 +265,7 @@ if option == options[1]:
             st.write("Deleted successfully")
             st.write("Your old dataframe")
             st.write(recurring_df)  # old dataframe
-    
+
             # delete row based on unique key
             recurring_df = remove_rows(recurring_df, "uuid", delete_df["uuid"])
             recurring_df = recurring_df.drop("uuid", axis=1)
@@ -271,7 +275,9 @@ if option == options[1]:
                 st.write("No dataframe available")
             else:
                 st.write(recurring_df)  # new dataframe
-                st.session_state["recurring_df"] = recurring_df # save it again in cache
-        
+                st.session_state[
+                    "recurring_df"
+                ] = recurring_df  # save it again in cache
+
 if option == options[2]:
     view_recurring()
