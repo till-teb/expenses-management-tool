@@ -281,9 +281,9 @@ if option == options[1]:
                 st.write("No dataframe available")
             else:
                 st.write(recurring_df)  # new dataframe
-                st.session_state[
-                    "recurring_df"
-                ] = recurring_df  # save it again in cache
+                
+                # save it again in cache
+                st.session_state["recurring_df"] = recurring_df  
 
 if option == options[2]:
     view_recurring()
