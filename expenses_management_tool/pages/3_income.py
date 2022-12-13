@@ -26,14 +26,14 @@ st.subheader("Please enter all your income here")
 def enter_income():
     """
     Function to enter the income
-    
+
     return dataframe for income
     """
     options = ["Fixed income", "Additional income"]
     categories = ["Salary", "Allowance", "Bonus", "Other"]
-    
+
     option = st.selectbox("Type", options)
-    
+
     if option == options[0]:
         # create container side by side
         col1, col2 = st.columns(2)
@@ -41,7 +41,7 @@ def enter_income():
             amount = st.number_input("Amount")
         with col2:
             category = st.selectbox("Category", (item for item in categories))
-        
+
     elif option == options[1]:
         # create container side by side
         col1, col2 = st.columns(2)
@@ -49,23 +49,19 @@ def enter_income():
             amount = st.number_input(("Amount"))
         with col2:
             category = st.selectbox("Category", (item for item in categories))
-        
+
     if "Other" in category:
         with col1:
             notes = st.text_input("Notes")
-    
+
     else:
         notes = np.nan
-            
+
     income_df = pd.DataFrame(
-        {
-            "type": [option],
-            "amount": [amount],
-            "category": [category],
-            "notes": [notes]
-        }
+        {"type": [option], "amount": [amount], "category": [category], "notes": [notes]}
     )
     return income_df
+
 
 def store(df):
     """
@@ -81,17 +77,15 @@ def store(df):
         stores the query-result in a new dataset.
 
         """
-        data = pd.DataFrame(
-            columns=["type", "amount", "category", "notes"]
-        )
+        data = pd.DataFrame(columns=["type", "amount", "category", "notes"])
         frames = [df, data]
         data = pd.concat(frames)
-        
+
         # save all the datasets into one folder "datasets"
         # folder = "datasets"
         # folder_PATH = os.path.join(root, folder)
         # if not os.path.exists(folder_PATH):
-        #     os.mkdir(folder_PATH)  # create folder "datasets" 
+        #     os.mkdir(folder_PATH)  # create folder "datasets"
 
         data.to_csv(FILENAME, index=False)
         return data
@@ -110,6 +104,7 @@ def store(df):
 
     return
 
+
 def view_income():
     """
     Function to view the income dataframe
@@ -123,7 +118,8 @@ def view_income():
             st.write(income_df)
     else:
         st.write("No dataframe available")
-        
+
+
 def delete_income():
     """
     Function to delete a single data entry from dataframe
@@ -141,12 +137,14 @@ def delete_income():
     if len(option) == 2:
         col1, col2 = st.columns(2)
         with col1:
-            income_type = st.selectbox("Choose income type", ("Fixed Income",
-                                                              "Additional Income"))
+            income_type = st.selectbox(
+                "Choose income type", ("Fixed Income", "Additional Income")
+            )
 
         with col2:
-            category = st.selectbox("Choose category", ("Salary", "Allowance",
-                                                        "Bonus", "Other"))
+            category = st.selectbox(
+                "Choose category", ("Salary", "Allowance", "Bonus", "Other")
+            )
 
         mask_cat = income_df["category"] == category
         mask_type = income_df["type"] == income_type
@@ -157,8 +155,9 @@ def delete_income():
             st.write(filtered_df)
 
     elif "Category" in option:
-        category = st.selectbox("Choose category", ("Salary", "Allowance", 
-                                                    "Bonus", "Other"))
+        category = st.selectbox(
+            "Choose category", ("Salary", "Allowance", "Bonus", "Other")
+        )
         mask = income_df["category"] == category
         filtered_df = income_df[mask]
         if len(filtered_df) == 0:
@@ -167,8 +166,9 @@ def delete_income():
             st.write(filtered_df)
 
     elif "Income Type" in option:
-        income_type = st.selectbox("Choose income type", ("Fixed income", 
-                                                          "Additional income"))
+        income_type = st.selectbox(
+            "Choose income type", ("Fixed income", "Additional income")
+        )
         mask = income_df["type"] == income_type
         filtered_df = income_df[mask]
         if len(filtered_df) == 0:
@@ -198,7 +198,7 @@ def remove_rows(df, col, values):
     Values can be a list.
     """
     return df[~df[col].isin(values)]
-    
+
 
 # main menu option
 options = ["Add income", "Delete income", "View your dataframe"]
@@ -209,8 +209,8 @@ if option == options[0]:
     income_df = enter_income()
     submit = st.button("Submit")
     if submit:
-        if income_df["amount"][0] != 0: # check input for amount
-            income_df = store(income_df) # save the income
+        if income_df["amount"][0] != 0:  # check input for amount
+            income_df = store(income_df)  # save the income
             st.session_state["income_df"] = income_df
             st.write("Saved successfully")
         else:
@@ -241,9 +241,9 @@ elif option == options[1]:
                 st.write("No dataframe available")
             else:
                 st.write(income_df)  # new dataframe
-                
+
                 # save it again in cache
-                st.session_state["income_df"] = income_df  
+                st.session_state["income_df"] = income_df
 
 elif option == options[2]:
     view_income()
