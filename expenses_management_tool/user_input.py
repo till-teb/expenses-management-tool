@@ -16,8 +16,7 @@ file = os.path.join(root, FILENAME)
 
 # Execute query
 def query(DATE):
-    regular_exp = int(0)
-    expense = str(input("what have you spent money on : ")).lower()
+    item = str(input("what have you spent money on : ")).lower()
     amount = float(input("how much money have you spent : "))
     importance = int(input("how important was your expense? (1-4) : "))
     category = int(
@@ -37,7 +36,7 @@ def query(DATE):
 
     df = pd.DataFrame(
         {
-            "expense": [expense],
+            "item": [item],
             "amount": [amount],
             "category": [category],
             "importance": [importance],
@@ -49,23 +48,23 @@ def query(DATE):
 
 
 # store query in dataset (ds)
-def store(DATE, df):
+def store(df):
     """
-    check if a dataset already exists? 
-    
-    
+    check if a dataset already exists?
+
+
             ---> If not, create one
-            
-            ---> If yes, save the query in the dataset. 
+
+            ---> If yes, save the query in the dataset.
     """
 
     def store_in_new_ds(df):
         """
         stores the query-result in a new dataset.
-        
+
         """
         data = pd.DataFrame(
-            columns=["expense", "amount", "importance", "category", "DATE"]
+            columns=["item", "amount", "importance", "category", "DATE"]
         )
         frames = [df, data]
         data = pd.concat(frames)
@@ -73,12 +72,12 @@ def store(DATE, df):
         print("--saved--")
         to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
         data = data.drop(to_drop, axis=1)
-        
+
         folder = "datasets"
-        folder_PATH = os.path.join(root, folder) 
+        folder_PATH = os.path.join(root, folder)
         if not os.path.exists(folder_PATH):
-            os.mkdir(folder_PATH) #create folder "datasets"
-        
+            os.mkdir(folder_PATH)  # create folder "datasets"
+
         data.to_csv(FILENAME, index=False)
         print(data)
         return data
@@ -100,6 +99,8 @@ def store(DATE, df):
     except:
         store_in_new_ds(df)
         print('\n--->new dataset "expenses_dataset.csv"  was successfully created.\n')
+
+    return
 
 
 
@@ -175,4 +176,4 @@ def query_regular_expenses():
 
 
 if __name__ == "__main__":
-    store(DATE, query(DATE))    # fuction to query and store expense
+    store(query(DATE))
