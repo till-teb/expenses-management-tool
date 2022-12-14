@@ -177,16 +177,18 @@ def delete_income():
             st.write(filtered_df)
 
     try:
-        delete_index = st.multiselect(
-            "Choose index to delete", (i for i in range(0, len(filtered_df)))
-        )
-        delete_df = filtered_df.iloc[delete_index]
-        st.write("This entry will be deleted")
-        if len(delete_df) == 0:
-            st.write("No data is chosen ")
-        else:
-            st.write(delete_df)
-        return delete_df
+        # check if filtered_df exist
+        if len(filtered_df) != 0:
+            delete_index = st.multiselect(
+                "Choose index to delete", (i for i in range(0, len(filtered_df)))
+            )
+            delete_df = filtered_df.iloc[delete_index]
+            st.write("This entry will be deleted")
+            if len(delete_df) == 0:
+                st.write("No data is chosen ")
+            else:
+                st.write(delete_df)
+            return delete_df
 
     except:
         st.write("Please choose your filter")
