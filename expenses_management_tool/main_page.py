@@ -51,19 +51,20 @@ if option == options[1]:
 
     # create a dataframe, which contain what we want to delete
     delete_df = delete_data()
-    submit = st.button("Delete")
-    if submit:
-        st.write("Deleted successfully")
-        st.write("Your old dataframe")
-        st.write(df)  # old dataframe
+    if delete_df is not None:  # check if delete_df exist
+        submit = st.button("Delete")
+        if submit:
+            st.write("Deleted successfully")
+            st.write("Your old dataframe")
+            st.write(df)  # old dataframe
 
-        # delete row based on unique key
-        df = remove_rows(df, "uuid", delete_df["uuid"])
-        df = df.drop("uuid", axis=1)
-        df.to_csv(FILENAME, index=False)  # save to the csv file
-        st.write("Your new dataframe!")
-        st.write(df)  # new dataframe
-        st.session_state["df"] = df
+            # delete row based on unique key
+            df = remove_rows(df, "uuid", delete_df["uuid"])
+            df = df.drop("uuid", axis=1)
+            df.to_csv(FILENAME, index=False)  # save to the csv file
+            st.write("Your new dataframe!")
+            st.write(df)  # new dataframe
+            st.session_state["df"] = df
 
 
 if option == options[2]:
