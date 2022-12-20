@@ -3,7 +3,7 @@ import pandas as pd
 import random
 
 
-fake = Faker(["de_DE"])
+fake = Faker()
 
 
 Category = ["Food and Beverages", "Consumables", "Leisure and Entertainment", "Transport", "Extraordinary Expenses"]
