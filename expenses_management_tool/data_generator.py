@@ -69,7 +69,7 @@ def dummy_data(amount):
         data.append(row)
     return data
 
-data = dummy_data(20)
+data = dummy_data(50)
 
 df = pd.DataFrame(data, columns=["Category","Name","Cost","Date","Importance","GorB","Subcategory"])
 
