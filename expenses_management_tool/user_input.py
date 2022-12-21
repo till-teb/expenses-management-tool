@@ -72,11 +72,12 @@ def store(df):
         print("--saved--")
         to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
         data = data.drop(to_drop, axis=1)
-
-        folder = "datasets"
-        folder_PATH = os.path.join(root, folder)
-        if not os.path.exists(folder_PATH):
-            os.mkdir(folder_PATH)  # create folder "datasets"
+        
+        # save all the datasets into one folder "datasets"
+        # folder = "datasets"
+        # folder_PATH = os.path.join(root, folder)
+        # if not os.path.exists(folder_PATH):
+        #     os.mkdir(folder_PATH)  # create folder "datasets" 
 
         data.to_csv(FILENAME, index=False)
         print(data)
