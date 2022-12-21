@@ -13,9 +13,11 @@ if "df" in st.session_state:
     df = st.session_state["df"]
     st.write(df)
 
-    category = df["category"].value_counts()
+    category = df["importance"].value_counts()
 
-    st.header("Spend by category")
+    st.header("Spend by importance")
+    
+    
     fig, ax = plt.subplots(figsize=(5, 5))
     ax.pie(
         category,
