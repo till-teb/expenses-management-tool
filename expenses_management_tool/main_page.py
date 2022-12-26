@@ -9,17 +9,17 @@ root = os.getcwd()
 FILENAME = "expenses_dataset.csv"
 
 try:
-    # dataset
+    # load the dataset, if it's available
     file = os.path.join(root, FILENAME)
     st.session_state["df"] = pd.read_csv(file)
 except:
     st.sidebar.write("No csv file found")
 
 st.title("Expenses")
-# st.write("What are you spend?")
+st.subheader("Please add all your expenses here")
 
 
-options = ["Enter single entry", "Delete entry", "Edit entry", "View your dataframe"]
+options = ["Enter single entry", "Delete entry", "View your dataframe"]
 
 # Create a select box
 option = st.selectbox("What you want to do", options)
@@ -61,7 +61,4 @@ if option == options[1]:
 
 
 if option == options[2]:
-    sf.edit_data()
-
-if option == options[3]:
     sf.view_data()
