@@ -62,12 +62,20 @@ subcategories = [
 
 
 def enter_recurring():
+    """
+    Function to add recurring expense
+    ...
+    return a dataframe
+    """
+    # initiate 2 container side by side
     col1, col2 = st.columns(2)
+    # first column content
     with col1:
         item = st.text_input("Item")
         amount = st.number_input("Price")
         importance = st.slider("Importance scale", min_value=1, max_value=4)
 
+    # second column content
     with col2:
         category = st.selectbox("Category", (item for item in categories))
 
@@ -155,8 +163,11 @@ def store(df):
 
 def delete_recurring():
     """
-    Function to delete a single data entry from dataframe
+    Function to delete a single data entry from recurring dataframe
+    ...
+    return a dataframe that should be deleted
     """
+    # load the dataframe, if it's available
     if "recurring_df" in st.session_state:
         df = st.session_state["recurring_df"]
     else:
@@ -165,7 +176,15 @@ def delete_recurring():
     st.write("Do you wish to delete any data?")
 
     options = ["Category", "Importance"]
-    option = st.multiselect("Filter by", options)
+    # initiate container
+    container = st.container()
+    all = st.checkbox("Select all")
+    # select all option
+    if all:
+        option = container.multiselect("Filter by", options, options)
+    # select some options
+    else:
+        option = container.multiselect("Filter by", options)
 
     if len(option) == 2:
         col1, col2 = st.columns(2)
@@ -242,50 +261,72 @@ def view_recurring():
 
 
 # main menu option
-options = ["Enter single entry", "Delete entry", "View your dataframe"]
+options = ["Add single entry", "Delete entry", "View your dataframe"]
 
 option = st.selectbox("What you want to do", (item for item in options))
 
 if option == options[0]:
-    recurring_df = enter_recurring()
+    docs = """
+    Add single entry option:
+        1. Create a new dataframe from the new entry
+        2. Simple input check for new entry
+            - if "item" is not None, then proceed to next step
+            - if "item" is None, notify as invalid input
+        3. Store the new dataframe
+            - if no dataframe available, create new one
+            - if dataframe already exist, merge with new dataframe and save it
+        4. Load it into session_state
+    """
+    recurring_df = enter_recurring()  # 1
     submit = st.button("Submit")
     if submit:
-        if recurring_df["item"][0] != "":  # check input for item
-            recurring_df = store(recurring_df)
-            st.session_state["recurring_df"] = recurring_df
+        if recurring_df["item"][0] != "":  # 2
+            recurring_df = store(recurring_df)  # 3
+            st.session_state["recurring_df"] = recurring_df  # 4
             st.write("Saved successfully")
         else:
             st.write("Invalid input")
 
 
 if option == options[1]:
-    # load the file from cache
-    recurring_df = st.session_state["recurring_df"]
+    docs = """
+    Delete entry option:
+        1. Load the dataframe from the session_state, if it's available
+        2. Assign temporary unique key to the dataframe
+        3. Create a dataframe, which contain what user want to delete
+        4. Simple input check for delete_df, if it's exist
+        5. Delete row from dataframe based on unique key.
+        6. Save to csv file
+    """
+    try:
+        # 1
+        recurring_df = st.session_state["recurring_df"]
+        # 2
+        recurring_df["uuid"] = [uuid.uuid4() for _ in range(len(recurring_df.index))]
+        # 3
+        delete_df = delete_recurring()
+        # 4
+        if delete_df is not None:
+            submit = st.button("Delete")
+            if submit:
+                st.write("Deleted successfully")
+                st.write("Your old dataframe")
+                st.write(recurring_df)  # old dataframe
+                # 5
+                recurring_df = remove_rows(recurring_df, "uuid", delete_df["uuid"])
+                recurring_df = recurring_df.drop("uuid", axis=1)
+                # 6
+                recurring_df.to_csv(FILENAME, index=False)
+                st.write("Your new dataframe!")
+                if len(recurring_df) == 0:
+                    st.write("No dataframe available")
+                else:
+                    st.write(recurring_df)  # new dataframe
 
-    # add temporary unique key
-    recurring_df["uuid"] = [uuid.uuid4() for _ in range(len(recurring_df.index))]
-
-    # create a dataframe, which contain what we want to delete
-    delete_df = delete_recurring()
-    if delete_df is not None:
-        submit = st.button("Delete")
-        if submit:
-            st.write("Deleted successfully")
-            st.write("Your old dataframe")
-            st.write(recurring_df)  # old dataframe
-
-            # delete row based on unique key
-            recurring_df = remove_rows(recurring_df, "uuid", delete_df["uuid"])
-            recurring_df = recurring_df.drop("uuid", axis=1)
-            recurring_df.to_csv(FILENAME, index=False)  # save to the csv file
-            st.write("Your new dataframe!")
-            if len(recurring_df) == 0:
-                st.write("No dataframe available")
-            else:
-                st.write(recurring_df)  # new dataframe
-
-                # save it again in cache
-                st.session_state["recurring_df"] = recurring_df
+                    # save it again in session_state
+                    st.session_state["recurring_df"] = recurring_df
+    except:
+        st.write("No dataframe available")
 
 if option == options[2]:
     view_recurring()
