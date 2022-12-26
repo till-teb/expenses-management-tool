@@ -20,7 +20,7 @@ except:
 
 # page setup and description
 st.title("Income")
-st.subheader("Please enter all your income here")
+st.subheader("Please add all your income here")
 
 
 def enter_income():

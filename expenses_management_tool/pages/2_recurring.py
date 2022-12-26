@@ -20,7 +20,7 @@ except:
 
 # page title and description
 st.title("Recurring expense")
-st.subheader("Here is your monthly fixed cost / your monthly commitment")
+st.subheader("Please add your monthly fixed cost / commitment here")
 
 # define the categories
 categories = [
