@@ -13,13 +13,21 @@ def split_DATE(data):
 # store query in dataset (ds)
 def store(df):
     """
-    check if a dataset already exists?
-
-
+    1. check if a folder for datasets already exists?
             ---> If not, create one
-
+            ---> If yes, go into the folder directory
+    2. check if a dataset already exists?
+            ---> If not, create one
             ---> If yes, save the query in the dataset.
     """
+    # save all the datasets into one folder "datasets"
+    folder = "datasets"
+    folder_PATH = os.path.join(root, folder)
+    # create folder "datasets"
+    if not os.path.exists(folder_PATH):
+        os.mkdir(folder_PATH)
+    # path to csv file in datasets folder
+    datasets_PATH = os.path.join(folder_PATH, FILENAME)
 
     def store_in_new_ds(df):
         """
@@ -34,37 +42,26 @@ def store(df):
         data = split_DATE(data)  # day, month, year as new column
         to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
         data = data.drop(to_drop, axis=1)
-        
-        # save all the datasets into one folder "datasets"
-        # folder = "datasets"
-        # folder_PATH = os.path.join(root, folder)
-        # if not os.path.exists(folder_PATH):
-        #     os.mkdir(folder_PATH)  # create folder "datasets" 
-
-        data.to_csv(FILENAME, index=False)
+        data.to_csv(datasets_PATH, index=False)
         return data
 
     # check if a dataset already exist
     try:
         df = split_DATE(df)  # day, month, year as new columns
-        data = pd.read_csv(file)
+        data = pd.read_csv(datasets_PATH)
         frames = [df, data]
         data = pd.concat(frames)
         to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
         data = data.drop(to_drop, axis=1)
-        data.to_csv(FILENAME, index=False)
+        data.to_csv(datasets_PATH, index=False)
         return data
 
     # if not, create one
     except:
         store_in_new_ds(df)
-        print('\n--->new dataset "expenses_dataset.csv"  was successfully created.\n')
 
     return
 
 # get the right working directory
 root = os.getcwd()
 FILENAME = "expenses_dataset.csv"
-
-# dataset
-file = os.path.join(root, FILENAME)

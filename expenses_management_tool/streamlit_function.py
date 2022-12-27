@@ -233,6 +233,9 @@ def view_data():
     # load the dataframe if it's available
     if "df" in st.session_state:
         df = st.session_state["df"]
-        st.write(df)
+        if len(df) == 0:
+            st.write("No dataframe available")
+        else:
+            st.write(df)
     else:
         st.write("No dataframe available")

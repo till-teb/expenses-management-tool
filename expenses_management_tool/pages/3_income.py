@@ -6,15 +6,13 @@ import uuid
 
 # get the right working directory
 root = os.getcwd()
+datasets = "datasets"
 FILENAME = "income_dataset.csv"
 
-# dataset
-file = os.path.join(root, FILENAME)
-
 try:
-    # load the dataset
-    file = os.path.join(root, FILENAME)
-    st.session_state["income_df"] = pd.read_csv(file)
+    # load the dataset, if it's available
+    datasets_PATH = os.path.join(root, datasets, FILENAME)
+    st.session_state["income_df"] = pd.read_csv(datasets_PATH)
 except:
     st.sidebar.write("No csv file found")
 
@@ -79,12 +77,21 @@ def enter_income():
 
 def store(df):
     """
-    check if a dataset already exists?
-
+    1. check if a folder for datasets already exists?
             ---> If not, create one
-
+            ---> If yes, go into the folder directory
+    2. check if a dataset already exists?
+            ---> If not, create one
             ---> If yes, save the query in the dataset.
     """
+    # save all the datasets into one folder "datasets"
+    folder = "datasets"
+    folder_PATH = os.path.join(root, folder)
+    # create folder "datasets", if it's not exist
+    if not os.path.exists(folder_PATH):
+        os.mkdir(folder_PATH)  # create folder "datasets"
+    # path to csv file in datasets folder
+    datasets_PATH = os.path.join(folder_PATH, FILENAME)
 
     def store_in_new_ds(df):
         """
@@ -94,22 +101,15 @@ def store(df):
         data = pd.DataFrame(columns=["type", "amount", "category", "notes"])
         frames = [df, data]
         data = pd.concat(frames)
-
-        # save all the datasets into one folder "datasets"
-        # folder = "datasets"
-        # folder_PATH = os.path.join(root, folder)
-        # if not os.path.exists(folder_PATH):
-        #     os.mkdir(folder_PATH)  # create folder "datasets"
-
-        data.to_csv(FILENAME, index=False)
+        data.to_csv(datasets_PATH, index=False)
         return data
 
     # check if a dataset already exist
     try:
-        data = pd.read_csv(file)
+        data = pd.read_csv(datasets_PATH)
         frames = [df, data]
         data = pd.concat(frames)
-        data.to_csv(FILENAME, index=False)
+        data.to_csv(datasets_PATH, index=False)
         return data
 
     # if not, create one
@@ -286,7 +286,7 @@ elif option == options[1]:
                 income_df = remove_rows(income_df, "uuid", delete_df["uuid"])
                 income_df = income_df.drop("uuid", axis=1)
                 # 6
-                income_df.to_csv(FILENAME, index=False)
+                income_df.to_csv(datasets_PATH, index=False)
                 st.write("Your new dataframe!")
                 if len(income_df) == 0:
                     st.write("No dataframe available")

@@ -6,12 +6,13 @@ from useful_functions import store
 import streamlit_function as sf
 # get the right working directory
 root = os.getcwd()
+datasets = "datasets"
 FILENAME = "expenses_dataset.csv"
 
 try:
     # load the dataset, if it's available
-    file = os.path.join(root, FILENAME)
-    st.session_state["df"] = pd.read_csv(file)
+    datasets_PATH = os.path.join(root, datasets, FILENAME)
+    st.session_state["df"] = pd.read_csv(datasets_PATH)
 except:
     st.sidebar.write("No csv file found")
 
@@ -80,7 +81,7 @@ if option == options[1]:
                 df = sf.remove_rows(df, "uuid", delete_df["uuid"])
                 df = df.drop("uuid", axis=1)
                 # 6
-                df.to_csv(FILENAME, index=False)
+                df.to_csv(datasets_PATH, index=False)
                 st.write("Your new dataframe!")
                 if len(df) == 0:
                     st.write("No dataframe available")
