@@ -32,7 +32,6 @@ def store(df):
         frames = [df, data]
         data = pd.concat(frames)
         data = split_DATE(data)  # day, month, year as new column
-        print("--saved--")
         to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
         data = data.drop(to_drop, axis=1)
         
@@ -43,7 +42,6 @@ def store(df):
         #     os.mkdir(folder_PATH)  # create folder "datasets" 
 
         data.to_csv(FILENAME, index=False)
-        print(data)
         return data
 
     # check if a dataset already exist
@@ -52,11 +50,9 @@ def store(df):
         data = pd.read_csv(file)
         frames = [df, data]
         data = pd.concat(frames)
-        print("--saved--")
         to_drop = ["DATE"]  # only columns: day, month, year column are nessesary
         data = data.drop(to_drop, axis=1)
         data.to_csv(FILENAME, index=False)
-        print(data)
         return data
 
     # if not, create one
