@@ -3,3 +3,4 @@ plotly
 streamlit
 uuid
 numpy
+matplotlib

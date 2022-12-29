@@ -17,7 +17,7 @@ except:
     st.sidebar.write("No csv file found")
 
 # page title and description
-st.title("Recurring expense")
+st.title("fix expense")
 st.subheader("Please add your monthly fixed cost / commitment here")
 
 # define the categories
@@ -27,6 +27,8 @@ categories = [
     "Leisure & Entertainment",
     "Transportation",
     "Other & Extraordinary",
+    "financial fees",
+    "living area"
 ]
 
 # define the subcategories
@@ -56,6 +58,8 @@ subcategories = [
     ],
     ["Public transportation", "Private transportation", "Other"],
     ["Additional costs", "Investment", "Other"],
+    ["taxes", "insurance", "bank"],
+    ["energy", "rent","Household appliances ","decoration"]
 ]
 
 
@@ -101,6 +105,14 @@ def enter_recurring():
         elif category == categories[4]:
             subcategory = st.selectbox(
                 "Subcategory", (item for item in subcategories[4])
+            )
+        elif category == categories[5]:
+            subcategory = st.selectbox(
+                "Subcategory", (item for item in subcategories[5])
+            )
+        elif category == categories[6]:
+            subcategory = st.selectbox(
+                "Subcategory", (item for item in subcategories[6])
             )
 
     recurring_df = pd.DataFrame(

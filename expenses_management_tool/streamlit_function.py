@@ -8,6 +8,8 @@ categories = [
     "Leisure & Entertainment",
     "Transportation",
     "Other & Extraordinary",
+    "financial fees",
+    "living area"
 ]
 
 # define the subcategories
@@ -37,6 +39,8 @@ subcategories = [
     ],
     ["Public transportation", "Private transportation", "Other"],
     ["Additional costs", "Investment", "Other"],
+    ["taxes", "insurance", "bank"],
+    ["energy", "rent","Household appliances ","decoration"]
 ]
 
 
@@ -81,7 +85,14 @@ def enter_data():
             subcategory = st.selectbox(
                 "Subcategory", (item for item in subcategories[4])
             )
-
+        elif category == categories[5]:
+            subcategory = st.selectbox(
+                "Subcategory", (item for item in subcategories[5])
+            )
+        elif category == categories[6]:
+            subcategory = st.selectbox(
+                "Subcategory", (item for item in subcategories[6])
+            )
     # third column content
     with col3:
         DATE = st.date_input("Date")

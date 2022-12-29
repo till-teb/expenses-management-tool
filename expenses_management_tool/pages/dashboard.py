@@ -15,6 +15,8 @@ if "df" in st.session_state:
 
     category = df["category"].value_counts()
 
+
+
     st.header("Spend by category")
     fig, ax = plt.subplots(figsize=(5, 5))
     ax.pie(
@@ -26,3 +28,33 @@ if "df" in st.session_state:
     p = plt.gcf()
     p.gca().add_artist(plt.Circle((0, 0), 0.7, color="white"))
     st.pyplot(fig)
+
+
+# Categories
+
+    category = df["importance"].value_counts()
+     
+     
+     
+    st.header("distribution of importance")
+    fig, ax = plt.subplots(figsize=(5, 5))
+    ax.pie(
+        category,
+        labels=(category.index),
+        wedgeprops={"linewidth": 7, "edgecolor": "white"},
+    )
+    # display a white circle in the middle of the pie chart
+    p = plt.gcf()
+    p.gca().add_artist(plt.Circle((0, 0), 0.7, color="white"))
+    st.pyplot(fig)
+    
+# amount plot
+
+    st.header("amount range")
+    barh_data = df["amount"]
+    fig, ax = plt.subplots()
+    ax.barh(barh_data,width=1)
+    st.bar_chart(barh_data)
+
+    
+
