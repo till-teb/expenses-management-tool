@@ -42,17 +42,21 @@ subcategories = [
 
 def enter_data():
     """
-    Function to enter a single data entry
+    Function to add a single data entry
+    ...
+    return a new dataframe
     """
-    col1, col2, col3 = st.columns(3)  # Create two container side by side
+    col1, col2, col3 = st.columns(3)  # Initiate 3 columns
+    # first column content
     with col1:
         item = st.text_input("Item")
         amount = st.number_input("Price")
         importance = st.slider("Importance scale", min_value=1, max_value=4)
 
+    # second column content
     with col2:
         category = st.selectbox("Category", (item for item in categories))
-
+        # show subcategory related to its main category
         if category == categories[0]:
             subcategory = st.selectbox(
                 "Subcategory", (item for item in subcategories[0])
@@ -78,10 +82,12 @@ def enter_data():
                 "Subcategory", (item for item in subcategories[4])
             )
 
+    # third column content
     with col3:
         DATE = st.date_input("Date")
         feeling = st.radio("How you are feeling on this day", ("Good", "Bad"))
 
+    # save into a dataframe
     df = pd.DataFrame(
         {
             "item": [item],
@@ -99,6 +105,8 @@ def enter_data():
 def filter_month():
     """
     Function to filter month, useful for edit/delete data from dataframe
+    ...
+    return a month number
     """
     months = {
         1: "Jan",
@@ -127,6 +135,8 @@ def filter_month():
 def filter_category():
     """
     Function to filter category, useful for edit/delete data from dataframe
+    ...
+    return category from list of categories
     """
     option = st.selectbox("Choose category", (item for item in categories))
     return option
@@ -135,7 +145,10 @@ def filter_category():
 def delete_data():
     """
     Function to delete a single data entry from dataframe
+    ...
+    return a dataframe that should be deleted
     """
+    # load the dataframe, if it's available
     if "df" in st.session_state:
         df = st.session_state["df"]
     else:
@@ -144,11 +157,24 @@ def delete_data():
     st.write("Do you wish to delete any data?")
 
     options = ["Month", "Category"]
-    option = st.multiselect("Filter by", options)
+    # initiate container
+    container = st.container()
+    all = st.checkbox("Select all")
+    # select all option
+    if all:
+        option = container.multiselect("Filter by", options, options)
+    # select some options
+    else:
+        option = container.multiselect("Filter by", options)
 
     if len(option) == 2:  # if both filter chosen
-        month = filter_month()
-        category = filter_category()
+        col1, col2 = st.columns(2)  # initiate 2 columns
+        # first column content
+        with col1:
+            month = filter_month()
+        # second column content
+        with col2:
+            category = filter_category()
         mask_month = df["month"] == month
         mask_category = df["category"] == category
         filtered_df = df[mask_month & mask_category]
@@ -200,28 +226,16 @@ def remove_rows(df, col, values):
     return df[~df[col].isin(values)]
 
 
-def edit_data():
-    """
-    Function to edit a column in dataframe
-    """
-    st.write("Do you wish to edit any data?")
-
-    options = ["Month", "Category"]
-    option = st.multiselect("Filter by", options)
-
-    if "Month" in option:
-        filter_month()
-
-    if "Category" in option:
-        filter_category()
-
-
 def view_data():
     """
     Function to view the dataframe
     """
+    # load the dataframe if it's available
     if "df" in st.session_state:
         df = st.session_state["df"]
-        st.write(df)
+        if len(df) == 0:
+            st.write("No dataframe available")
+        else:
+            st.write(df)
     else:
         st.write("No dataframe available")
