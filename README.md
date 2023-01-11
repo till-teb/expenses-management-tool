@@ -1,3 +1,5 @@
+![GitHub](https://img.shields.io/github/license/till-teb/expenses-management-tool)
+
 # expenses-management-tool
 Management tool to analyse, visualize and forecast expenses.
 
