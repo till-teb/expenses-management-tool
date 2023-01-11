@@ -6,7 +6,7 @@ import random
 fake = Faker()
 
 
-Category = ["Food and Beverages", "Consumables", "Leisure and Entertainment", "Transport", "Extraordinary Expenses"]
+Category = ["Food and Beverages", "Consumables", "Leisure and Entertainment", "Transport", "Extraordinary Expenses", "Financial Fees", "Living Area"]
 Name = []
 Cost = []
 Date = []
@@ -19,7 +19,9 @@ subcategories = {
     "Consumables": ["Drugstore","Clothing", "Electronics", "Furniture", "Pets", "Education", "Stationery", "Medicines", "Narcotics", "Other"],
     "Leisure and Entertainment": ["Cinema", "Restaurant", "Party", "Event", "Hairdresser", "Hobby", "Vacation", "Other"],
     "Transport": ["Public Transportation", "Private Transportation", "Other"],
-    "Extraordinary Expenses": ["Additional Costs", "Investments", "Other"]
+    "Extraordinary Expenses": ["Additional Costs", "Investments", "Other"],
+    "Financial Fees": ["Financial Fees"],
+    "Living Area": ["Rent", "Other"]
 }
 
 # Define a dictionary that maps categories to ranges of possible costs
@@ -28,7 +30,9 @@ cost_ranges = {
     "Consumables": (10, 450),
     "Leisure and Entertainment": (20, 200),
     "Transport": (5, 35),
-    "Extraordinary Expenses": (150, 700)
+    "Extraordinary Expenses": (150, 700),
+    "Financial Fees": (10, 50),
+    "Living Area": (150, 600)
 }
 
 
