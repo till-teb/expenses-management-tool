@@ -145,13 +145,21 @@ def filter_month():
 
 def filter_category():
     """
-    Function to filter category, useful for edit/delete data from dataframe
+    Function to filter category, useful for view/delete data from dataframe
     ...
     return category from list of categories
     """
     option = st.selectbox("Choose category", (item for item in categories))
     return option
 
+def filter_importance():
+    """
+    Function to filter importance, useful for view/delete data from dataframe
+    ...
+    return importance from list of importances
+    """    
+    option = st.selectbox("Choose importance", (_ for _ in range(1,4)))
+    return option
 
 def delete_data():
     """
@@ -194,47 +202,40 @@ def delete_data():
         else:
             st.write(filtered_df)
 
-    elif "Month" in option:
-        month = filter_month()  # get the entry from selected month
-        mask = df["month"] == month
-        filtered_df = df[mask]
+    elif len(option) == 1:
+        if "Month" in option:
+            month = filter_month()  # get the entry from selected month
+            mask = df["month"] == month
+            filtered_df = df[mask]
+
+        if "Category" in option:
+            category = filter_category()  # get the entry from selected category
+            mask = df["category"] == category
+            filtered_df = df[mask]
+
+        # check if filtered_df exists
         if len(filtered_df) == 0:
             st.write("No data available")
         else:
             st.write(filtered_df)
 
-    elif "Category" in option:
-        category = filter_category()  # get the entry from selected category
-        mask = df["category"] == category
-        filtered_df = df[mask]
-        if len(filtered_df) == 0:
-            st.write("No data available")
+    # if no filter is chosen
+    elif len(option) == 0:
+        filtered_df = df  # return df without filter
+        st.write("No filter is chosen")
+        st.write(filtered_df)
+    
+    if len(filtered_df) != 0:
+        delete_index = st.multiselect(
+            "Choose index to delete", (filtered_df.index.values)
+        )
+        delete_df = filtered_df.loc[delete_index]
+        st.write("This entry will be deleted")
+        if len(delete_df) == 0:
+            st.write("No dataframe available")
         else:
-            st.write(filtered_df)
-
-    try:
-        # check if filtered_df exist
-        if len(filtered_df) != 0:
-            delete_index = st.multiselect(
-                "Choose index to delete", (i for i in range(0, len(filtered_df)))
-            )
-            delete_df = filtered_df.iloc[delete_index]
-            st.write("This entry will be deleted")
-            if len(delete_df) == 0:
-                st.write("No dataframe available")
-            else:
-                st.write(delete_df)
-            return delete_df
-    except:
-        st.write("Please choose your filter")
-
-
-def remove_rows(df, col, values):
-    """
-    Function to remove row from selected column, that contain values.
-    Values can be a list.
-    """
-    return df[~df[col].isin(values)]
+            st.write(delete_df)
+        return delete_df
 
 
 def view_data():
@@ -247,6 +248,99 @@ def view_data():
         if len(df) == 0:
             st.write("No dataframe available")
         else:
-            st.write(df)
+            filter_prompt = st.checkbox("Use filter")
+            # condition if user want to use filter
+            if filter_prompt is False:
+                st.write(df)
+
+            else:
+                options = ["Month", "Category", "Importance"]
+                # initiate container
+                container = st.container()
+                all = st.checkbox("Select all")
+                # select all option
+                if all:
+                    option = container.multiselect("Filter by", options, options)
+                # select some options
+                else:
+                    option = container.multiselect("Filter by", options)
+
+                # only one filter is chosen
+                if len(option) == 1:
+                    if "Month" in option:
+                        month = filter_month()
+                        mask_month = df["month"] == month
+                        filtered_df = df[mask_month]
+    
+                    elif "Category" in option:
+                        category = filter_category()
+                        mask_category = df["category"] == category
+                        filtered_df = df[mask_category]
+    
+                    else:
+                        importance = filter_importance()
+                        mask_importance = df["importance"] == importance
+                        filtered_df = df[mask_importance]
+    
+                    # check if filtered_df exists
+                    if len(filtered_df) != 0:
+                        st.write(filtered_df)
+                    else:
+                        st.write("No data available")
+
+                # only two filter are chosen
+                elif len(option) == 2:
+                    col1, col2 = st.columns(2)
+                    if "Month" and "Category" in option:
+                        with col1: 
+                            month = filter_month()
+                        with col2:
+                            category = filter_category()
+                        mask_month = df["month"] == month
+                        mask_category = df["category"] == category
+                        filtered_df = df[mask_month & mask_category]
+    
+                    elif "Importance" and "Category" in option:
+                        with col1:
+                            category = filter_category()
+                        with col2:
+                            importance = filter_importance()
+                        mask_category = df["category"] == category
+                        mask_importance = df["importance"] == importance
+                        filtered_df = df[mask_category & mask_importance]
+    
+                    elif "Importance" and "Month" in option:
+                        with col1:
+                            month = filter_month()
+                        with col2:
+                            importance = filter_importance()
+                        mask_month = df["month"] == month
+                        mask_importance = df["importance"] == importance
+                        filtered_df = df[mask_importance & mask_month]
+                    
+                    # check if filtered_df exists
+                    if len(filtered_df) != 0:
+                        st.write(filtered_df)
+                    else:
+                        st.write("No data available")
+
+                # all filter are chosen
+                elif len(option) == 3:
+                    col1, col2, col3 = st.columns(3)
+                    with col1:
+                        month = filter_month()
+                    with col2:
+                        category = filter_category()
+                    with col3:
+                        importance = filter_importance()
+                    
+                    mask_month = df["month"] == month
+                    mask_category = df["category"] == category
+                    mask_importance = df["importance"] == importance
+                    filtered_df = df[mask_month & mask_category & mask_importance]
+                    if len(filtered_df) == 0:
+                        st.write("No data available")
+                    else:
+                        st.write(filtered_df)
     else:
         st.write("No dataframe available")
