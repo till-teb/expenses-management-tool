@@ -1,6 +1,6 @@
 pandas
 plotly
 streamlit
-uuid
 numpy
 matplotlib
+faker
