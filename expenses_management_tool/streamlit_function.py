@@ -8,8 +8,8 @@ categories = [
     "Leisure & Entertainment",
     "Transportation",
     "Other & Extraordinary",
-    "financial fees",
-    "living area"
+    "Financial fees",
+    "Living area"
 ]
 
 # define the subcategories
@@ -37,10 +37,10 @@ subcategories = [
         "Vacation",
         "Other",
     ],
-    ["Public transportation", "Private transportation", "Other"],
-    ["Additional costs", "Investment", "Other"],
-    ["taxes", "insurance", "bank"],
-    ["energy", "rent","Household appliances ","decoration"]
+    ["Public Transportation", "Private Transportation", "Other"],
+    ["Additional Costs", "Investment", "Other"],
+    ["Taxes", "Insurance", "Bank", "Other"],
+    ["Energy", "Rent", "Household Appliances ", "Decoration", "Other"]
 ]
 
 
@@ -53,7 +53,7 @@ def enter_data():
     col1, col2, col3 = st.columns(3)  # Initiate 3 columns
     # first column content
     with col1:
-        item = st.text_input("Item")
+        item = st.text_input("Item").capitalize()
         amount = st.number_input("Price")
         importance = st.slider("Importance scale", min_value=1, max_value=4)
 
@@ -93,6 +93,11 @@ def enter_data():
             subcategory = st.selectbox(
                 "Subcategory", (item for item in subcategories[6])
             )
+
+        if subcategory == "Other":
+            notes = st.text_input("Notes").capitalize()
+            subcategory = notes
+
     # third column content
     with col3:
         DATE = st.date_input("Date")
@@ -152,14 +157,16 @@ def filter_category():
     option = st.selectbox("Choose category", (item for item in categories))
     return option
 
+
 def filter_importance():
     """
     Function to filter importance, useful for view/delete data from dataframe
     ...
     return importance from list of importances
-    """    
-    option = st.selectbox("Choose importance", (_ for _ in range(1,4)))
+    """
+    option = st.selectbox("Choose importance", (_ for _ in range(1, 4)))
     return option
+
 
 def delete_data():
     """
@@ -241,6 +248,9 @@ def delete_data():
 def view_data():
     """
     Function to view the dataframe
+    Has 3 filters which is category, month and importance
+    ...
+    return expenses dataframe
     """
     # load the dataframe if it's available
     if "df" in st.session_state:

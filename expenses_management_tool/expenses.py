@@ -1,7 +1,6 @@
 import os
 import streamlit as st
 import pandas as pd
-import uuid
 from useful_functions import store
 import streamlit_function as sf
 # get the right working directory
@@ -31,8 +30,10 @@ if option == options[0]:
     Add single entry option:
         1. Create a new dataframe from the new entry
         2. Simple input check for new entry
-            - if "item" is not None, then proceed to next step
-            - if "item" is None, notify as invalid input
+            - if "item" and "amount" is not None, then proceed to next step
+            - notify as invalid input
+                - if "item" is None
+                - if "amount" is 0
         3. Store the new dataframe
             - if no dataframe available, create new one
             - if dataframe already exist, merge with new dataframe and save it
@@ -43,7 +44,7 @@ if option == options[0]:
     submit = st.button("submit")
     if submit:
         # 2
-        if df["item"][0] != "":
+        if df["item"][0] != "" and df["amount"][0] != 0:
             # 3
             df = store(df)
             # 4
