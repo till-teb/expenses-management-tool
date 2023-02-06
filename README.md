@@ -1,4 +1,5 @@
 ![GitHub](https://img.shields.io/github/license/till-teb/expenses-management-tool)
+![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/till-teb/expenses-management-tool/main.yml)
 
 # expenses-management-tool
 Management tool to analyse, visualize and forecast expenses.
@@ -15,5 +16,5 @@ Then:
 - enter subfolder
 - run:
 ```
-streamlit run main_page.py
+streamlit expenses.py
 ```
