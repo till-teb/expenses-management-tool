@@ -1,6 +1,6 @@
 import pytest
 import pandas as pd
-import useful_functions as uf
+import expenses_management_tool.useful_functions as uf
 
 def test_split_date():
     # df with formatted date
