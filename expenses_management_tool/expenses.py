@@ -1,7 +1,6 @@
 import os
 import streamlit as st
 import pandas as pd
-import uuid
 from useful_functions import store
 import streamlit_function as sf
 # get the right working directory
@@ -31,8 +30,10 @@ if option == options[0]:
     Add single entry option:
         1. Create a new dataframe from the new entry
         2. Simple input check for new entry
-            - if "item" is not None, then proceed to next step
-            - if "item" is None, notify as invalid input
+            - if "item" and "amount" is not None, then proceed to next step
+            - notify as invalid input
+                - if "item" is None
+                - if "amount" is 0
         3. Store the new dataframe
             - if no dataframe available, create new one
             - if dataframe already exist, merge with new dataframe and save it
@@ -43,7 +44,7 @@ if option == options[0]:
     submit = st.button("submit")
     if submit:
         # 2
-        if df["item"][0] != "":
+        if df["item"][0] != "" and df["amount"][0] != 0:
             # 3
             df = store(df)
             # 4
@@ -57,30 +58,24 @@ if option == options[1]:
     docs = """
     Delete entry option:
         1. Load the dataframe from the session_state, if it's available
-        2. Assign temporary unique key to the dataframe
-        3. Create a dataframe, which contain what user want to delete
-        4. Simple input check for delete_df, if it's exist
-        5. Delete row from dataframe based on unique key.
-        6. Save to csv file
+        2. Create a dataframe, which contain what user want to delete
+        3. Simple input check for delete_df, if it's exist
+        4. Delete row from dataframe based on index delete_df
+        5. Save to csv file
     """
-    try:
+    if "df" in st.session_state:
         # 1
         df = st.session_state["df"]
         # 2
-        df["uuid"] = [uuid.uuid4() for _ in range(len(df.index))]
-        # 3
         delete_df = sf.delete_data()
-        # 4
+        # 3
         if delete_df is not None:
             submit = st.button("Delete")
             if submit:
                 st.write("Deleted successfully")
-                st.write("Your old dataframe")
-                st.write(df)  # old dataframe
+                # 4
+                df = df.drop(index=delete_df.index.values, axis=1)
                 # 5
-                df = sf.remove_rows(df, "uuid", delete_df["uuid"])
-                df = df.drop("uuid", axis=1)
-                # 6
                 df.to_csv(datasets_PATH, index=False)
                 st.write("Your new dataframe!")
                 if len(df) == 0:
@@ -88,7 +83,7 @@ if option == options[1]:
                 else:
                     st.write(df)  # new dataframe
                 st.session_state["df"] = df
-    except:
+    else:
         st.write("No dataframe available")
 
 
