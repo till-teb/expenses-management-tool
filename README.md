@@ -16,5 +16,5 @@ Then:
 - enter subfolder
 - run:
 ```
-streamlit expenses.py
+streamlit run expenses.py
 ```
