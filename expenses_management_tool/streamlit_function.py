@@ -62,12 +62,17 @@ def enter_data():
     ...
     return a new dataframe
     """
-    col1, col2, col3 = st.columns(3)  # Initiate 3 columns
+    col1, col2 = st.columns(2)  # Initiate 2 columns
     # first column content
     with col1:
         item = st.text_input("Item").capitalize()
         amount = st.number_input("Price")
-        importance = st.slider("Importance scale", min_value=1, max_value=4)
+        importance_dict = {"Not important" : 1,
+                           "Less Important" : 2,
+                           "Important" : 3,
+                           " Most Important" : 4}
+        importance_word = st.select_slider("Importance scale", (i for i in importance_dict.keys()))
+        importance = importance_dict.get(importance_word)
 
     # second column content
     with col2:
@@ -110,8 +115,6 @@ def enter_data():
             notes = st.text_input("Notes").capitalize()
             subcategory = notes
 
-    # third column content
-    with col3:
         DATE = st.date_input("Date")
         feeling = st.radio("How you are feeling on this day", ("Good", "Bad"))
 
