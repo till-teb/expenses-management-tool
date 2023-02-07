@@ -1,5 +1,17 @@
 import streamlit as st
 import pandas as pd
+import os
+
+# get the right working directory
+root = os.getcwd()
+datasets = "datasets"
+def load_datasets(FILENAME, df):
+    try:
+        # load the dataset, if it's available
+        datasets_PATH = os.path.join(root, datasets, FILENAME)
+        st.session_state[df] = pd.read_csv(datasets_PATH)
+    except:
+        st.sidebar.write("No csv file found")
 
 # define the categories
 categories = [

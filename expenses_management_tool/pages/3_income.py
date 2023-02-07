@@ -2,6 +2,7 @@ import os
 import numpy as np
 import streamlit as st
 import pandas as pd
+import useful_functions as uf
 
 # get the right working directory
 root = os.getcwd()
@@ -68,8 +69,12 @@ def enter_income():
 
     income_df = pd.DataFrame(
         {"type": [option], "amount": [amount], "category": [category],
-         "DATE": [DATE]}
+         "DATE": [str(DATE)]}
     )
+    
+    if option == options[1]:
+        income_df = uf.split_DATE(income_df)
+        income_df = income_df.drop("DATE", axis=1)
     return income_df
 
 
@@ -336,7 +341,7 @@ elif option == options[1]:
                 income_df = income_df.drop(index=delete_df.index.values, axis=1)
                 # 5
                 income_df.to_csv(datasets_PATH, index=False)
-                st.write("Your new dataframe!")
+                st.info("Your new dataframe!", icon="ℹ️")
                 if len(income_df) == 0:
                     st.write("No dataframe available")
                 else:

@@ -49,7 +49,7 @@ if option == options[0]:
             df = store(df)
             # 4
             st.session_state["df"] = df
-            st.write("Saved successfully")
+            st.info("Saved successfully", icon="✅")
         else:
             st.write("Invalid input")
 
@@ -77,7 +77,7 @@ if option == options[1]:
                 df = df.drop(index=delete_df.index.values, axis=1)
                 # 5
                 df.to_csv(datasets_PATH, index=False)
-                st.write("Your new dataframe!")
+                st.info("Your new dataframe!", icon="ℹ️")
                 if len(df) == 0:
                     st.write("No dataframe available")
                 else:

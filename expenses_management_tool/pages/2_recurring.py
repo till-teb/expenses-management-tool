@@ -371,7 +371,7 @@ if option == options[1]:
                 recurring_df = recurring_df.drop(index=delete_df.index.values, axis=1)
                 # 5
                 recurring_df.to_csv(datasets_PATH, index=False)
-                st.write("Your new dataframe!")
+                st.info("Your new dataframe!", icon="ℹ️")
                 if len(recurring_df) == 0:
                     st.write("No dataframe available")
                 else:
