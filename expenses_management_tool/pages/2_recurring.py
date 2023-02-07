@@ -74,7 +74,12 @@ def enter_recurring():
     with col1:
         item = st.text_input("Item").capitalize()
         amount = st.number_input("Price")
-        importance = st.slider("Importance scale", min_value=1, max_value=4)
+        importance_dict = {"Not important" : 1,
+                           "Less Important" : 2,
+                           "Important" : 3,
+                           " Most Important" : 4}
+        importance_word = st.select_slider("Importance scale", (i for i in importance_dict.keys()))
+        importance = importance_dict.get(importance_word)
 
     # second column content
     with col2:

@@ -74,7 +74,8 @@ def enter_income():
     
     if option == options[1]:
         income_df = uf.split_DATE(income_df)
-        income_df = income_df.drop("DATE", axis=1)
+        
+    income_df = income_df.drop("DATE", axis=1)
     return income_df
 
 
