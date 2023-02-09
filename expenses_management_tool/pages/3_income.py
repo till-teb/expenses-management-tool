@@ -315,7 +315,7 @@ if option == options[0]:
         if income_df["amount"][0] != 0:  # 2
             income_df = store(income_df)  # 3
             st.session_state["income_df"] = income_df  # 4
-            st.write("Saved successfully")
+            st.info("Saved successfully", icon="\U00002728")
         else:
             st.write("Invalid input")
 
