@@ -37,25 +37,19 @@ for file in FILENAME.values():
 
 if f"{FILENAME[selected_file]}" in st.session_state:
     
-    inc_df = st.session_state["income_dataset.csv"]
-    recex_df = st.session_state["recurring_expenses.csv"]
-    ex_df = st.session_state["expenses_dataset.csv"]
-    
     # select time span
     selected_month = st.sidebar.selectbox("Choose month", months.keys())
-    selected_year = st.sidebar.selectbox("Choose year", ex_df["year"].unique().tolist()[::-1])
+    selected_year = st.sidebar.selectbox("Choose year", st.session_state["expenses_dataset.csv"]["year"].unique().tolist()[::-1])
     
-    def select_time_span():
-        
-        if selected_file == "recurring":
-            filtered_df = st.session_state[FILENAME[selected_file]]
-            st.write(filtered_df)
-        else:
-            mask = (st.session_state[FILENAME[selected_file]]["month"] == months[selected_month]) | (st.session_state[FILENAME[selected_file]]["month"].isna())
-            filtered_df = st.session_state[FILENAME[selected_file]][mask]
-            st.write(filtered_df)
-            
     def Financial_overview():
+        
+        # finance mask
+        inc_mask = (st.session_state["income_dataset.csv"]["month"] == months[selected_month]) & (st.session_state["income_dataset.csv"]["year"] == selected_year) | (st.session_state["income_dataset.csv"]["month"].isna())
+        ex_mask = (st.session_state["expenses_dataset.csv"]["month"] == months[selected_month]) & (st.session_state["expenses_dataset.csv"]["year"] == selected_year) | (st.session_state["expenses_dataset.csv"]["month"].isna())
+        
+        inc_df = st.session_state["income_dataset.csv"][inc_mask]
+        recex_df = st.session_state["recurring_expenses.csv"]
+        ex_df = st.session_state["expenses_dataset.csv"][ex_mask]
         
         # Financial overview bar plot
         y1 = inc_df["amount"].sum()
@@ -77,9 +71,24 @@ if f"{FILENAME[selected_file]}" in st.session_state:
         st.write(f"Total income : {y1}")
         st.write(f"Total expenses : {y2}")
     
-    
+    def select_time_span():
+        
+        if selected_file == "recurring":
+            
+            Financial_overview()
+            
+            filtered_df = st.session_state[FILENAME[selected_file]]
+            st.write(filtered_df)
+        else:
+            mask = (st.session_state[FILENAME[selected_file]]["month"] == months[selected_month]) & (st.session_state[FILENAME[selected_file]]["year"] == selected_year)| (st.session_state[FILENAME[selected_file]]["month"].isna())
+            
+            Financial_overview()
+            
+            filtered_df = st.session_state[FILENAME[selected_file]][mask]
+            st.write(filtered_df)
+            
     # Print selected DF
-    Financial_overview()
+    
     select_time_span()
     
     #test
