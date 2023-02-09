@@ -6,21 +6,22 @@ import pandas as pd
 # Get the right working directory
 root = os.getcwd()
 datasets = "datasets"
-FILENAME = { "expenses" : "expenses_dataset.csv", "recurring" : "recurring_expenses.csv", "income" : "income_dataset.csv"}
+FILENAME = { "expenses" : "expenses_dataset.csv", 
+            "recurring" : "recurring_expenses.csv", 
+            "income" : "income_dataset.csv"}
 
-months = {
-"Jan" : 1,
-"Feb" : 2,
-"Mar" : 3,
-"Apr" : 4,
-"May" : 5,
-"Jun" : 6,
-"Jul" : 7,
-"Aug" : 8,
-"Sep" : 9,
-"Oct" : 10,
-"Nov" : 11,
-"Dec" : 12}
+months = {"Jan" : 1,
+        "Feb" : 2,
+        "Mar" : 3,
+        "Apr" : 4,
+        "May" : 5,
+        "Jun" : 6,
+        "Jul" : 7,
+        "Aug" : 8,
+        "Sep" : 9,
+        "Oct" : 10,
+        "Nov" : 11,
+        "Dec" : 12}
 
 st.title("Dashboard")
 
@@ -28,69 +29,71 @@ st.title("Dashboard")
 selected_file = st.sidebar.selectbox("Select your CSV file", FILENAME.keys())
 
 for file in FILENAME.values():
+    datasets_path = os.path.join(root, datasets, file)
     try:
         # Load the dataset
-        datasets_PATH = os.path.join(root, datasets, file)
-        st.session_state[file] = pd.read_csv(datasets_PATH)
+        st.session_state[file] = pd.read_csv(datasets_path)
     except:
         st.sidebar.write(f"No {file} file found")
 
-if f"{FILENAME[selected_file]}" in st.session_state:
+# If file is found, select time span and finance mask
+if FILENAME[selected_file] in st.session_state:
     
-    # select time span
     selected_month = st.sidebar.selectbox("Choose month", months.keys())
-    selected_year = st.sidebar.selectbox("Choose year", st.session_state["expenses_dataset.csv"]["year"].unique().tolist()[::-1])
+    selected_year = st.sidebar.selectbox( "Choose year", st.session_state["expenses_dataset.csv"]["year"].unique().tolist()[::-1])
+    
+    # Create mask for month/year
+    inc_mask = ((st.session_state["income_dataset.csv"]["month"] == months[selected_month])
+                & (st.session_state["income_dataset.csv"]["year"] == selected_year)
+                | (st.session_state["income_dataset.csv"]["month"].isna()))
+    
+    ex_mask = ((st.session_state["expenses_dataset.csv"]["month"] == months[selected_month])
+               & (st.session_state["expenses_dataset.csv"]["year"] == selected_year)
+               | (st.session_state["expenses_dataset.csv"]["month"].isna()))
+
+    # Apply mask
+    inc_df = st.session_state["income_dataset.csv"][inc_mask]
+    recex_df = st.session_state["recurring_expenses.csv"]
+    ex_df = st.session_state["expenses_dataset.csv"][ex_mask]
+
+    #selected_df = {"expenses": ex_df, "recurring": recex_df, "income": inc_df}
     
     def Financial_overview():
-        
-        # finance mask
-        inc_mask = (st.session_state["income_dataset.csv"]["month"] == months[selected_month]) & (st.session_state["income_dataset.csv"]["year"] == selected_year) | (st.session_state["income_dataset.csv"]["month"].isna())
-        ex_mask = (st.session_state["expenses_dataset.csv"]["month"] == months[selected_month]) & (st.session_state["expenses_dataset.csv"]["year"] == selected_year) | (st.session_state["expenses_dataset.csv"]["month"].isna())
-        
-        inc_df = st.session_state["income_dataset.csv"][inc_mask]
-        recex_df = st.session_state["recurring_expenses.csv"]
-        ex_df = st.session_state["expenses_dataset.csv"][ex_mask]
         
         # Financial overview bar plot
         y1 = inc_df["amount"].sum()
         y2 = recex_df["amount"].sum() + ex_df["amount"].sum()
-        
+
         df = pd.DataFrame({"Financial overview": [y2, y1], "Index": [2,1]})
-        
+
         fig = px.bar(df, x="Financial overview", y="Index", 
-                     color=["expenses", "income"], 
-                     color_discrete_sequence=[px.colors.qualitative.Alphabet[1], px.colors.qualitative.Plotly[2]], 
-                     orientation="h", 
-                     barmode="stack")
-        
-        # Change size and width
+                 color=["expenses", "income"], 
+                 color_discrete_sequence=[px.colors.qualitative.Alphabet[1], px.colors.qualitative.Plotly[2]], 
+                 orientation="h", 
+                 barmode="stack")
+
         fig.update_layout(width=800, height=200)
         
         st.plotly_chart(fig)
-    
+        
         st.write(f"Total income : {y1}")
         st.write(f"Total expenses : {y2}")
-    
+
+    # All plots for the selected time period are loaded here
     def select_time_span():
-        
+        Financial_overview()
+    
         if selected_file == "recurring":
-            
-            Financial_overview()
-            
             filtered_df = st.session_state[FILENAME[selected_file]]
-            st.write(filtered_df)
         else:
             mask = (st.session_state[FILENAME[selected_file]]["month"] == months[selected_month]) & (st.session_state[FILENAME[selected_file]]["year"] == selected_year)| (st.session_state[FILENAME[selected_file]]["month"].isna())
-            
-            Financial_overview()
-            
             filtered_df = st.session_state[FILENAME[selected_file]][mask]
-            st.write(filtered_df)
+        
+        st.subheader(f"{selected_file}:")
+        st.write(filtered_df)
+        st.write(f"The total amount of {selected_file} is : ", filtered_df["amount"].sum())
             
-    # Print selected DF
-    
+    # Print selected DF (main)
     select_time_span()
-    
-    #test
-    st.write(months[selected_month])
+
     
