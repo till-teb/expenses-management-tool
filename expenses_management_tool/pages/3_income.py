@@ -315,7 +315,7 @@ if option == options[0]:
         if income_df["amount"][0] != 0:  # 2
             income_df = store(income_df)  # 3
             st.session_state["income_df"] = income_df  # 4
-            st.write("Saved successfully")
+            st.info("Saved successfully", icon="\U00002728")
         else:
             st.write("Invalid input")
 
@@ -342,7 +342,7 @@ elif option == options[1]:
                 income_df = income_df.drop(index=delete_df.index.values, axis=1)
                 # 5
                 income_df.to_csv(datasets_PATH, index=False)
-                st.info("Your new dataframe!", icon="ℹ️")
+                st.info("Your new dataframe!", icon="\U0001F92F")
                 if len(income_df) == 0:
                     st.write("No dataframe available")
                 else:

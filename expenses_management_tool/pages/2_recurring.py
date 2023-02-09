@@ -348,7 +348,7 @@ if option == options[0]:
         if recurring_df["item"][0] != "" and recurring_df["amount"][0] != 0:  # 2
             recurring_df = store(recurring_df)  # 3
             st.session_state["recurring_df"] = recurring_df  # 4
-            st.write("Saved successfully")
+            st.info("Saved successfully", icon="\U00002728")
         else:
             st.write("Invalid input")
 
@@ -376,7 +376,7 @@ if option == options[1]:
                 recurring_df = recurring_df.drop(index=delete_df.index.values, axis=1)
                 # 5
                 recurring_df.to_csv(datasets_PATH, index=False)
-                st.info("Your new dataframe!", icon="ℹ️")
+                st.info("Your new dataframe!", icon="\U0001F92F")
                 if len(recurring_df) == 0:
                     st.write("No dataframe available")
                 else:
