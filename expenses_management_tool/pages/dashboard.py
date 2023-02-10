@@ -74,8 +74,8 @@ if FILENAME[selected_file] in st.session_state:
         
         st.plotly_chart(fig)
         
-        st.write(f"Total income : {y1}")
-        st.write(f"Total expenses : {y2}")
+        st.write(f"Total income {selected_month}. : ", y1)
+        st.write(f"Total expenses {selected_month}. : ", y2)
         
     def pie_plot(filtered_df, selection, width=800, height=400):
         
