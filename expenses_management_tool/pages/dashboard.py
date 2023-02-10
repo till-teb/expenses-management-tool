@@ -88,6 +88,33 @@ if FILENAME[selected_file] in st.session_state:
         
         st.plotly_chart(fig)
 
+    def credit_line_plot(width=800, height=400):
+        
+        # calculation of expenses on credit of the month
+        sort_df_expenses = ex_df.sort_values(["day"], ascending=True)
+        sort_df_expenses.iloc[0, sort_df_expenses.columns.get_loc("amount")] += recex_df["amount"].sum()
+        sort_df_expenses["sum"] = sort_df_expenses["amount"].cumsum()
+        
+        # check if entry has na value on day
+        na_inc_mask = inc_df["day"].isna()
+        sort_df_expenses["inc_values"] = inc_df["amount"][na_inc_mask].sum()
+
+        # check if entry has same value on day and add this to the total subsequent entries
+        for index, row in sort_df_expenses.iterrows():
+            day = row["day"]
+            match = inc_df[inc_df["day"] == day]
+            if not match.empty:
+                sort_df_expenses.at[index, "inc_values"] += match["amount"]   
+        
+        # calculates the total value amount
+        sort_df_expenses["credit"] = sort_df_expenses["inc_values"] - sort_df_expenses["sum"]
+        
+        # plot
+        fig = px.line(sort_df_expenses, x="day", y="credit", title=f"Credit history over the month {selected_month} :")
+        
+        fig.update_layout(width=width, height=height)
+        st.plotly_chart(fig)
+        
     # all plots for the selected time period are loaded here
     def plot_select_time_span():
         Financial_overview()
@@ -95,15 +122,19 @@ if FILENAME[selected_file] in st.session_state:
         if selected_file == "recurring":
             filtered_df = st.session_state[FILENAME[selected_file]]
         else:
-            mask = (st.session_state[FILENAME[selected_file]]["month"] == months[selected_month]) & (st.session_state[FILENAME[selected_file]]["year"] == selected_year)| (st.session_state[FILENAME[selected_file]]["month"].isna())
+            mask = (st.session_state[FILENAME[selected_file]]["month"] == months[selected_month]) & (st.session_state[FILENAME[selected_file]]["year"] == selected_year) | (st.session_state[FILENAME[selected_file]]["month"].isna())
             filtered_df = st.session_state[FILENAME[selected_file]][mask]
         
         st.subheader(f"{selected_file}:")
         
-        # print daterframe from selected_file
+        # print daterframe from selected_file of the month
         st.write(filtered_df)
+        
+        credit_line_plot()
+            
         st.write(f"The total amount of {selected_file} is : ", filtered_df["amount"].sum())
         
+        st.subheader("Details :")
         # to avoid conflict with non-existent column
         if selected_file == "income":
             
