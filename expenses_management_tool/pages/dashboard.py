@@ -3,7 +3,7 @@ import streamlit as st
 import plotly.express as px
 import pandas as pd
 
-# Get the right working directory
+# get the right working directory
 root = os.getcwd()
 datasets = "datasets"
 FILENAME = { "expenses" : "expenses_dataset.csv", 
@@ -25,7 +25,7 @@ months = {"Jan" : 1,
 
 st.title("Dashboard")
 
-# Create the dropdown list
+# create the dropdown list
 selected_file = st.sidebar.selectbox("Select your CSV file", FILENAME.keys())
 
 for file in FILENAME.values():
@@ -36,13 +36,13 @@ for file in FILENAME.values():
     except:
         st.sidebar.write(f"No {file} file found")
 
-# If file is found, select time span and finance mask
+# if file is found, select time span and finance mask
 if FILENAME[selected_file] in st.session_state:
     
     selected_month = st.sidebar.selectbox("Choose month", months.keys())
-    selected_year = st.sidebar.selectbox( "Choose year", st.session_state["expenses_dataset.csv"]["year"].unique().tolist()[::-1])
+    selected_year = st.sidebar.selectbox( "Choose year", st.session_state["expenses_dataset.csv"]["year"].unique().tolist())
     
-    # Create mask for month/year
+    # create mask for month/year
     inc_mask = ((st.session_state["income_dataset.csv"]["month"] == months[selected_month])
                 & (st.session_state["income_dataset.csv"]["year"] == selected_year)
                 | (st.session_state["income_dataset.csv"]["month"].isna()))
@@ -51,16 +51,14 @@ if FILENAME[selected_file] in st.session_state:
                & (st.session_state["expenses_dataset.csv"]["year"] == selected_year)
                | (st.session_state["expenses_dataset.csv"]["month"].isna()))
 
-    # Apply mask
+    # apply mask
     inc_df = st.session_state["income_dataset.csv"][inc_mask]
     recex_df = st.session_state["recurring_expenses.csv"]
     ex_df = st.session_state["expenses_dataset.csv"][ex_mask]
-
-    #selected_df = {"expenses": ex_df, "recurring": recex_df, "income": inc_df}
     
     def Financial_overview():
         
-        # Financial overview bar plot
+        # financial overview bar plot
         y1 = inc_df["amount"].sum()
         y2 = recex_df["amount"].sum() + ex_df["amount"].sum()
 
@@ -78,9 +76,20 @@ if FILENAME[selected_file] in st.session_state:
         
         st.write(f"Total income : {y1}")
         st.write(f"Total expenses : {y2}")
+        
+    def pie_plot(filtered_df, selection, width=800, height=400):
+        
+        # group by category and sum the amounts
+        category_group = filtered_df.groupby(selection)["amount"].sum().reset_index()
+        fig = px.pie(category_group, values="amount", names=selection)
+        
+        # change size and width
+        fig.update_layout(width=width, height=height)
+        
+        st.plotly_chart(fig)
 
-    # All plots for the selected time period are loaded here
-    def select_time_span():
+    # all plots for the selected time period are loaded here
+    def plot_select_time_span():
         Financial_overview()
     
         if selected_file == "recurring":
@@ -90,10 +99,35 @@ if FILENAME[selected_file] in st.session_state:
             filtered_df = st.session_state[FILENAME[selected_file]][mask]
         
         st.subheader(f"{selected_file}:")
+        
+        # print daterframe from selected_file
         st.write(filtered_df)
         st.write(f"The total amount of {selected_file} is : ", filtered_df["amount"].sum())
+        
+        # to avoid conflict with non-existent column
+        if selected_file == "income":
             
-    # Print selected DF (main)
-    select_time_span()
-
-    
+            pie_plot(filtered_df, "category")
+        
+        else:
+            
+            # select box category
+            select_category = st.selectbox("category", filtered_df["category"].unique().tolist())
+            
+            # initiate 2 container side by side
+            col1, col2 = st.columns(2)
+            
+            # first column content
+            with col1:
+                
+                # call the pie plot function
+                pie_plot(filtered_df, "category", width=400, height=400)
+                
+            # second column content
+            with col2:
+                
+                # call the pie plot function with subcategory
+                pie_plot(filtered_df[filtered_df["category"] == select_category], "subcategory" , width=400, height=400)
+        
+    # print selected DF (main)
+    plot_select_time_span()
