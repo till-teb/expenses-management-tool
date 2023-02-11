@@ -77,14 +77,14 @@ if FILENAME[selected_file] in st.session_state:
         st.write(f"Total income {selected_month}. : ", y1)
         st.write(f"Total expenses {selected_month}. : ", y2)
         
-    def pie_plot(filtered_df, selection, width=800, height=400):
+    def pie_plot(filtered_df, selection, title, width=800, height=400):
         
         # group by category and sum the amounts
         category_group = filtered_df.groupby(selection)["amount"].sum().reset_index()
         fig = px.pie(category_group, values="amount", names=selection)
         
         # change size and width
-        fig.update_layout(width=width, height=height)
+        fig.update_layout(title=title, width=width, height=height)
         
         st.plotly_chart(fig)
 
@@ -137,7 +137,7 @@ if FILENAME[selected_file] in st.session_state:
 
         st.plotly_chart(fig)
         
-        st.write("Average importance of expenses this month : ", holder.median())
+        st.write("Median importance of expenses this month : ", holder.median())
     
     # feeling over the month
     def feeling_plot(width=400, height=400):
@@ -176,9 +176,9 @@ if FILENAME[selected_file] in st.session_state:
     
     st.subheader("Details :")
     
-    select_category = st.selectbox("Select details", ["Expense feeling", "Categorie details"])
+    select_category = st.selectbox("Select details", ["Feeling details", "Categorie details"])
     
-    if select_category == "Expense feeling":
+    if select_category == "Feeling details":
         
         # check for data
         if len(ex_df) != 0:
@@ -203,7 +203,7 @@ if FILENAME[selected_file] in st.session_state:
         # to avoid conflict with non-existent column
         if selected_file == "income":
             
-            pie_plot(filtered_df, "category")
+            pie_plot(filtered_df, "category", title="Categories")
         
         else:
             
@@ -217,11 +217,11 @@ if FILENAME[selected_file] in st.session_state:
             with col1:
                 
                 # call the pie plot function
-                pie_plot(filtered_df, "category", width=400, height=400)
+                pie_plot(filtered_df, "category", title="Categories", width=400, height=400)
                 
             # second column content
             with col2:
                 
                 # call the pie plot function with subcategory
-                pie_plot(filtered_df[filtered_df["category"] == select_category], "subcategory" , width=400, height=400)
+                pie_plot(filtered_df[filtered_df["category"] == select_category], "subcategory", title="Subcategories", width=400, height=400)
 
