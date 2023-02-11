@@ -342,7 +342,7 @@ elif option == options[1]:
                 income_df = income_df.drop(index=delete_df.index.values, axis=1)
                 # 5
                 income_df.to_csv(datasets_PATH, index=False)
-                st.info("Your new dataframe!", icon="\U0001F92F")
+                st.info("Your new dataframe!", icon="\U0001F680")
                 if len(income_df) == 0:
                     st.write("No dataframe available")
                 else:
