@@ -223,4 +223,4 @@ if FILENAME[selected_file] in st.session_state:
                 # call the pie plot function with subcategory
                 pie_plot(filtered_df[filtered_df["category"] == select_category], "subcategory", title="Subcategories", width=400, height=400)
 
->>>>>>> main
+
