@@ -1,4 +1,6 @@
 pandas
-matplotlib
+plotly
 streamlit
-uuid
+numpy
+matplotlib
+faker
