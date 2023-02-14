@@ -165,7 +165,7 @@ if FILENAME[selected_file] in st.session_state:
         mask = (st.session_state[FILENAME[selected_file]]["month"] == months[selected_month]) & (st.session_state[FILENAME[selected_file]]["year"] == selected_year) | (st.session_state[FILENAME[selected_file]]["month"].isna())
         filtered_df = st.session_state[FILENAME[selected_file]][mask]
     
-    # creit plot
+    # credit plot
     credit_line_plot()
     
     st.subheader(f"{selected_file}:")
