@@ -12,7 +12,7 @@ Inputs via the financial tool are saved as a CSV file in the user's own database
 
 ## Installation and run
 
-### loca:
+### local:
 Download and install:   
 ```
 git clone https://github.com/till-teb/expenses-management-tool.git  
