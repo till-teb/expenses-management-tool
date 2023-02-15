@@ -2,7 +2,7 @@
 ![GitHub Workflow Status](https://img.shields.io/github/actions/workflow/status/till-teb/expenses-management-tool/main.yml)
 
 # expenses-management-tool
-Management tool to analyse, visualize and forecast expenses.
+Management tool to analyse and visualize expenses.
 
 ### More detailed description:
 
