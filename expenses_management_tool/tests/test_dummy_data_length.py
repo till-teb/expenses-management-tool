@@ -1,3 +1,4 @@
+import pytest
 import expenses_management_tool.data_generator as dd
 
 def test_dummy_data_length():

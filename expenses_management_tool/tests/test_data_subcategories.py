@@ -1,4 +1,4 @@
-
+import pytest
 import expenses_management_tool.data_generator as dd
 
 Category = ["Food and Beverages", "Consumables", "Leisure and Entertainment", "Transport", "Extraordinary Expenses", "Financial Fees", "Living Area"]
