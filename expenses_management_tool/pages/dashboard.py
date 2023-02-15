@@ -85,9 +85,9 @@ if FILENAME[selected_file] in st.session_state:
         
         # change size and width
         fig.update_layout(title=title, width=width, height=height)
-
+        
         st.plotly_chart(fig)
-    
+
     def credit_line_plot(width=800, height=400):
         
         # check for data
@@ -224,5 +224,4 @@ if FILENAME[selected_file] in st.session_state:
                 
                 # call the pie plot function with subcategory
                 pie_plot(filtered_df[filtered_df["category"] == select_category], "subcategory", title="Subcategories", width=400, height=400)
-
 
