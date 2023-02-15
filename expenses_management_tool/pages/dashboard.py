@@ -6,10 +6,11 @@ import pandas as pd
 # get the right working directory
 root = os.getcwd()
 datasets = "datasets"
+# list of files
 FILENAME = { "expenses" : "expenses_dataset.csv", 
             "recurring" : "recurring_expenses.csv", 
             "income" : "income_dataset.csv"}
-
+# list of months
 months = {"Jan" : 1,
         "Feb" : 2,
         "Mar" : 3,
@@ -23,11 +24,10 @@ months = {"Jan" : 1,
         "Nov" : 11,
         "Dec" : 12}
 
-st.title("Dashboard")
-
 # create the dropdown list
 selected_file = st.sidebar.selectbox("Select your CSV file", FILENAME.keys())
 
+#check for files
 for file in FILENAME.values():
     datasets_path = os.path.join(root, datasets, file)
     try:
@@ -42,7 +42,7 @@ if FILENAME[selected_file] in st.session_state:
     selected_month = st.sidebar.selectbox("Choose month", months.keys())
     selected_year = st.sidebar.selectbox( "Choose year", st.session_state["expenses_dataset.csv"]["year"].unique().tolist())
     
-    # create mask for month/year
+    # create month/year mask for income and expenses
     inc_mask = ((st.session_state["income_dataset.csv"]["month"] == months[selected_month])
                 & (st.session_state["income_dataset.csv"]["year"] == selected_year)
                 | (st.session_state["income_dataset.csv"]["month"].isna()))
@@ -74,6 +74,7 @@ if FILENAME[selected_file] in st.session_state:
         
         st.plotly_chart(fig)
         
+        # ptint values
         st.write(f"Total income {selected_month}. : ", y1)
         st.write(f"Total expenses {selected_month}. : ", y2)
         
@@ -116,13 +117,15 @@ if FILENAME[selected_file] in st.session_state:
             
             fig.update_layout(width=width, height=height)
             st.plotly_chart(fig)
+            
+            # print value
             st.write("Your current balance this month is : ", sort_df_expenses.iloc[-1, sort_df_expenses.columns.get_loc("credit")])
         
         #if there is no data
         else:
             st.info("No expenses available to display calculatation for this month", icon="\U0001F635")
             
-    # importance over the month
+    # importance history over the month
     def importance_plot(width=400, height=400):
     
         # counts the number of occurring values in importance
@@ -134,9 +137,9 @@ if FILENAME[selected_file] in st.session_state:
         # plot
         fig = px.bar(imp_counts, x=imp_counts.index, y=imp_counts.values)
         fig.update_layout(title="Importance for the expenses :", xaxis_title="Importance", yaxis_title="Amount", width=width, height=height)
-
         st.plotly_chart(fig)
         
+        # print value
         st.write("Median importance of expenses this month : ", holder.median())
     
     # feeling over the month
@@ -148,7 +151,6 @@ if FILENAME[selected_file] in st.session_state:
         # plot
         fig = px.bar(feeling_counts, x=feeling_counts.index, y=feeling_counts.values)
         fig.update_layout(title="Feelings about the expenses :", xaxis_title="Feeling", yaxis_title="Amount", width=width, height=height)
-
         st.plotly_chart(fig)
         
         # print most frequent value
@@ -157,6 +159,9 @@ if FILENAME[selected_file] in st.session_state:
     
     # MAIN:
     # all plots for the selected time period are loaded here
+    st.title("Dashboard")
+    
+    # finance plot
     Financial_overview()
 
     if selected_file == "recurring":
@@ -176,8 +181,10 @@ if FILENAME[selected_file] in st.session_state:
     
     st.subheader("Details :")
     
+    # selectbox for more details
     select_category = st.selectbox("Select details", ["Feeling details", "Categorie details"])
     
+    # details feeling / importence
     if select_category == "Feeling details":
         
         # check for data
@@ -197,7 +204,8 @@ if FILENAME[selected_file] in st.session_state:
         #if there is no data
         else:
             st.info("No expenses available to display calculatation for this month", icon="\U0001F635")
-        
+    
+    # categorie details
     else: 
         
         # to avoid conflict with non-existent column
